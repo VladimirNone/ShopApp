@@ -1,0 +1,91 @@
+﻿@{
+    Layout = null;
+}
+<html>
+<head>
+    <title>Hello React</title>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="~/css/mainStyles.css" />
+    <script src="~/lib/jquery/jquery.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header">
+                <div class="header_body">
+                    <a class="header_logo" href="#">
+                        <img src="~/img/logo.jpg" alt="logo" />
+                    </a>
+                    <div class="header_items">
+                        <ul class="header_list">
+                            <li>
+                                <a href="#">Github</a>
+                            </li>
+                            <li>
+                                <a href="#">Главная</a>
+                            </li>
+                            <li>
+                                <div class="authorization">
+                                    <form>
+                                        <div class="auth_props">
+                                            <input name="login" placeholder="Login" />
+                                            <input name="password" placeholder="Password" />
+                                        </div>
+                                        <div class="auth_btns">
+                                            <button type="submit" formmethod="post" formaction="index.html">Войти</button>
+                                            <button type="submit" formmethod="post" formaction="index.html">Регистрация</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="header_under">
+                    <div class="header_under_items">
+                        <div class="header_under_selected_info">
+                            <ul class="header_under_list">
+                                <li>
+                                    <a href="#">Категории</a>
+                                    <ul class="categories">
+                                        <li>
+                                            <a>Intresting things</a>
+                                        </li>
+                                        <li>
+                                            <a>Car</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+
+                                </li>
+                                <li>
+
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="header_under_searching">
+                            <form>
+                                <input type="text" name="searching_field" placeholder="Поиск" />
+                                <button type="submit" formmethod="post" formaction="index.html">Найти</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <div class="content">
+            <div class="content_body">
+                <ul id="content" class="grid">
+                </ul>
+            </div>
+        </div>
+        <footer>
+        </footer>
+    </div>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/16.13.0/umd/react.development.js"></script>
+    <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.13.0/umd/react-dom.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.7.1/remarkable.min.js"></script>
+    <script src="@Url.Content("~/js/tutorial.jsx")"></script>
+</body>
+</html>

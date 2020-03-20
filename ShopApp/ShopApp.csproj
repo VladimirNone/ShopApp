@@ -1,0 +1,119 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+	<AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
+    <AspNetCoreModuleName>AspNetCoreModule</AspNetCoreModuleName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20200228195647_ini.cs" />
+    <Compile Remove="Migrations\20200228195647_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200228200951_ini.cs" />
+    <Compile Remove="Migrations\20200228200951_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200228201113_ini.cs" />
+    <Compile Remove="Migrations\20200228201113_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200228201535_changed.cs" />
+    <Compile Remove="Migrations\20200228201535_changed.Designer.cs" />
+    <Compile Remove="Migrations\20200228202437_ini.cs" />
+    <Compile Remove="Migrations\20200228202437_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200228202826_ini.cs" />
+    <Compile Remove="Migrations\20200228202826_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200228203110_two.cs" />
+    <Compile Remove="Migrations\20200228203110_two.Designer.cs" />
+    <Compile Remove="Migrations\20200228203237_ini.cs" />
+    <Compile Remove="Migrations\20200228203237_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200228203326_ini.cs" />
+    <Compile Remove="Migrations\20200228203326_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200228203618_ini.cs" />
+    <Compile Remove="Migrations\20200228203618_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200228203745_ini.cs" />
+    <Compile Remove="Migrations\20200228203745_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200229081725_ini.cs" />
+    <Compile Remove="Migrations\20200229081725_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200229104511_ini.cs" />
+    <Compile Remove="Migrations\20200229104511_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200229104716_two.cs" />
+    <Compile Remove="Migrations\20200229104716_two.Designer.cs" />
+    <Compile Remove="Migrations\20200229104818_thre.cs" />
+    <Compile Remove="Migrations\20200229104818_thre.Designer.cs" />
+    <Compile Remove="Migrations\20200229105040_ini.cs" />
+    <Compile Remove="Migrations\20200229105040_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200229105150_two.cs" />
+    <Compile Remove="Migrations\20200229105150_two.Designer.cs" />
+    <Compile Remove="Migrations\20200229105304_threee.cs" />
+    <Compile Remove="Migrations\20200229105304_threee.Designer.cs" />
+    <Compile Remove="Migrations\20200229105605_ini.cs" />
+    <Compile Remove="Migrations\20200229105605_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200229105703_ini.cs" />
+    <Compile Remove="Migrations\20200229105703_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200229105807_ini.cs" />
+    <Compile Remove="Migrations\20200229105807_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200229162056_ini.cs" />
+    <Compile Remove="Migrations\20200229162056_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200229183153_tow.cs" />
+    <Compile Remove="Migrations\20200229183153_tow.Designer.cs" />
+    <Compile Remove="Migrations\20200229183426_three.cs" />
+    <Compile Remove="Migrations\20200229183426_three.Designer.cs" />
+    <Compile Remove="Migrations\20200229183748_ini.cs" />
+    <Compile Remove="Migrations\20200229183748_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200229183829_two.cs" />
+    <Compile Remove="Migrations\20200229183829_two.Designer.cs" />
+    <Compile Remove="Migrations\20200301130249_ini.cs" />
+    <Compile Remove="Migrations\20200301130249_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200301130342_two.cs" />
+    <Compile Remove="Migrations\20200301130342_two.Designer.cs" />
+    <Compile Remove="Migrations\20200301130450_three.cs" />
+    <Compile Remove="Migrations\20200301130450_three.Designer.cs" />
+    <Compile Remove="Migrations\20200301130637_three.cs" />
+    <Compile Remove="Migrations\20200301130637_three.Designer.cs" />
+    <Compile Remove="Migrations\20200301130802_four.cs" />
+    <Compile Remove="Migrations\20200301130802_four.Designer.cs" />
+    <Compile Remove="Migrations\20200301163131_four.cs" />
+    <Compile Remove="Migrations\20200301163131_four.Designer.cs" />
+    <Compile Remove="Migrations\20200301163242_four.cs" />
+    <Compile Remove="Migrations\20200301163242_four.Designer.cs" />
+    <Compile Remove="Migrations\20200301163414_four.cs" />
+    <Compile Remove="Migrations\20200301163414_four.Designer.cs" />
+    <Compile Remove="Migrations\20200301163943_five.cs" />
+    <Compile Remove="Migrations\20200301163943_five.Designer.cs" />
+    <Compile Remove="Migrations\20200301164118_three.cs" />
+    <Compile Remove="Migrations\20200301164118_three.Designer.cs" />
+    <Compile Remove="Migrations\20200301164344_four.cs" />
+    <Compile Remove="Migrations\20200301164344_four.Designer.cs" />
+    <Compile Remove="Migrations\20200301190151_ini.cs" />
+    <Compile Remove="Migrations\20200301190151_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200301190254_ini.cs" />
+    <Compile Remove="Migrations\20200301190254_ini.Designer.cs" />
+    <Compile Remove="Migrations\20200301190354_two.cs" />
+    <Compile Remove="Migrations\20200301190354_two.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JavaScriptEngineSwitcher.ChakraCore" Version="3.4.3" />
+    <PackageReference Include="JavaScriptEngineSwitcher.ChakraCore.Native.win-x64" Version="3.3.2" />
+    <PackageReference Include="JavaScriptEngineSwitcher.Extensions.MsDependencyInjection" Version="3.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+    <PackageReference Include="React.AspNet" Version="5.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\img\" />
+    <Folder Include="wwwroot\lib\" />
+  </ItemGroup>
+
+
+</Project>
