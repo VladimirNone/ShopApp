@@ -50,7 +50,7 @@ namespace ShopApp.Infrastructure
         public User GetUserById(int id)
             => db.Users.Find(id);
 
-        public List<Product> GetProductsByProductType(ProductType type)
-            => db.ProductTypes.Include(h => h.Products).Single(h => h.Id == type.Id).Products;
+        public List<Product> GetProductsByProductTypeName(string typeName)
+            => db.ProductTypes.Include(h => h.Products).Single(h => h.NameOfType.Equals(typeName)).Products;
     }
 }

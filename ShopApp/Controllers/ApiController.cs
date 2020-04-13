@@ -19,12 +19,34 @@ namespace ShopApp.Controllers
             repo = repository;
         }
 
-        [HttpGet("prods")]
-        public List<Product> GetProducts()
+        [HttpGet("categories")]
+        public IEnumerable<ProductType> GetProductTypes()
+            => repo.GetProductTypes();
+
+        [HttpGet("category/{typeName}/{page:int}")]
+        public IEnumerable<Product> GetProductsByType(string typeName, int page)
+            => repo.GetProductsByProductTypeName(typeName);
+
+        [HttpGet("search/{productName}/{page:int}")]
+        public IEnumerable<Product> GetProductsByName(string productName, int page)
         {
-            var r = repo.GetProductsByProductType(new ProductType() { NameOfType = "Cars", Id = 7 });
-            r.AddRange(repo.GetProductsByProductType(new ProductType() { NameOfType = "Cars", Id = 7 }));
+            if (page == 1)
+                return new List<Product>();//testing
+            return repo.FindProductsByName(productName);
+        }
+
+        [HttpGet("product/{id:int}")]
+        public Product GetProductById(int id)
+            => repo.GetProductById(id);
+
+        [HttpGet("prods/{page:int}")]
+        public IEnumerable<Product> GetProducts(int page)
+        {
+            var r = repo.FindProductsByName("");
+            r.AddRange(r);
+            r.AddRange(r);
             return r;
         }
+
     }
 }

@@ -21,7 +21,7 @@ namespace ShopApp.Infrastructure
         List<Comment> GetCommentsFromProduct(Product product);
 
         List<Product> GetProductsFromUser(User userAuthor);
-        List<Product> GetProductsByProductType(ProductType type);
+        List<Product> GetProductsByProductTypeName(string typeName);
         Product GetProductById(int id);
         List<Product> FindProductsByName(string partOfName);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ShopApp.Models
@@ -9,7 +10,7 @@ namespace ShopApp.Models
     {
         public int Id { get; set; }
         public string NameOfType { get; set; }
-
+        [JsonIgnore]
         public List<Product> Products { get; set; }
     }
 }

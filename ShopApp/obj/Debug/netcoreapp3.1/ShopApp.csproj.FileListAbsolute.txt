@@ -153,3 +153,5 @@ E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\ShopApp.MvcApplicationPartsA
 E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\ShopApp.MvcApplicationPartsAssemblyInfo.cache
 E:\Programs\ShopApp\ShopApp\bin\Debug\netcoreapp3.1\libman.json
 E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Main\Index.cshtml.g.cs
+E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
+E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Main\Product.cshtml.g.cs
