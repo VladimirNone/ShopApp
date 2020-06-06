@@ -14,6 +14,7 @@ namespace ShopApp.Controllers
         {
             return View();
         }
+
         [Route("product/{id:int}")]
         public IActionResult Product(int id)
         {

@@ -4,53 +4,70 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace ShopApp.Infrastructure
 {
     public class EFShopRepository : IRepository
     {
-        private ShopAppDbContext db { get; set; }
-        public EFShopRepository(ShopAppDbContext dbContext)
-            => db = dbContext;
-
+        ShopAppDbContext shopDb { get; set; }
+        public EFShopRepository(ShopAppDbContext shopDbContext)
+        {
+            shopDb = shopDbContext;
+        }
 
         public void AddComment(Comment comment)
-            => db.Comments.Add(comment);
+            => shopDb.Comments.Add(comment);
 
         public void AddOrder(Order order)
-            => db.Orders.Add(order);
+            => shopDb.Orders.Add(order);
 
         public void AddProduct(Product product)
-            => db.Products.Add(product);
+            => shopDb.Products.Add(product);
 
         public void AddUser(User user)
-            => db.Users.Add(user);
+            => shopDb.Users.Add(user);
+
+        public void AddProductType(ProductType productType)
+            => shopDb.ProductTypes.Add(productType);
 
         public List<Product> FindProductsByName(string partOfName)
-            => db.Products.Where(p => p.Name.Contains(partOfName)).ToList();
+            => shopDb.Products.Where(p => p.Name.Contains(partOfName)).ToList();
 
         public List<Comment> GetCommentsFromProduct(Product product)
-            => db.Products.Include(h => h.Comments).Single(h => h.Id == product.Id).Comments;
+            => shopDb.Products.Include(h => h.Comments).Single(h => h.Id == product.Id).Comments;
 
         public List<Comment> GetCommentsFromUser(User userOwner)
-            => db.Users.Include(h=>h.Comments).Single(h => h.Id == userOwner.Id).Comments;
+            => shopDb.Users.Include(h=>h.Comments).Single(h => h.Id == userOwner.Id).Comments;
 
         public List<Order> GetOrdersFromUser(User userOwner)
-            => db.Users.Include(h => h.Orders).Single(h => h.Id == userOwner.Id).Orders;
+            => shopDb.Users.Include(h => h.Orders).Single(h => h.Id == userOwner.Id).Orders;
 
         public Product GetProductById(int id)
-            => db.Products.Single(p => p.Id == id);
+            => shopDb.Products.Single(p => p.Id == id);
 
         public List<Product> GetProductsFromUser(User userAuthor)
-            => db.Users.Include(h => h.PublishedProducts).Single(h => h.Id == userAuthor.Id).PublishedProducts;
+            => shopDb.Users.Include(h => h.PublishedProducts).Single(h => h.Id == userAuthor.Id).PublishedProducts;
 
         public List<ProductType> GetProductTypes()
-            => db.ProductTypes.ToList();
+            => shopDb.ProductTypes.ToList();
+
+        public Product[] GetProducts()
+            => shopDb.Products.AsNoTracking().ToArray();
+
+        public User[] GetUsers()
+            => shopDb.Users.AsNoTracking().ToArray();
 
         public User GetUserById(int id)
-            => db.Users.Find(id);
+            => shopDb.Users.Find(id); 
 
         public List<Product> GetProductsByProductTypeName(string typeName)
-            => db.ProductTypes.Include(h => h.Products).Single(h => h.NameOfType.Equals(typeName)).Products;
+            => shopDb.ProductTypes.Include(h => h.Products).Single(h => h.NameOfType.Equals(typeName)).Products;
+
+        public async Task SaveChangesAsync()
+            => await shopDb.SaveChangesAsync();
+
+        public void UpdateProduct(Product product)
+            => shopDb.Update(product);
     }
 }

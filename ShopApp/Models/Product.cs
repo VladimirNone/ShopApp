@@ -15,8 +15,9 @@ namespace ShopApp.Models
         public string Description { get; set; }
         public string LinkToImage { get; set; }
         public int Count { get; set; }
+        public DateTime DateOfPublication { get; set; }
 
-        public int PublisherId { get; set; }
+        public string PublisherId { get; set; }
         [JsonIgnore]
         public User Publisher { get; set; }
 

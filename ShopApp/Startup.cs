@@ -17,6 +17,9 @@ using Microsoft.AspNetCore.Http;
 using JavaScriptEngineSwitcher.ChakraCore;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using React.AspNet;
+using ShopApp.Models;
+using Microsoft.AspNetCore.Identity;
+using ShopApp.ExternalModules;
 
 namespace ShopApp
 {
@@ -32,9 +35,13 @@ namespace ShopApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddDbContext<ShopAppDbContext>(d => d.UseSqlServer(Configuration.GetConnectionString("ShopAppDb")));
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<ShopAppDbContext>();
+
             services.AddScoped<IRepository, EFShopRepository>();
+
+            services.AddTransient<DataGenerator>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddReact();
@@ -54,8 +61,10 @@ namespace ShopApp
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseReact(config => { });
-
             app.UseStaticFiles();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

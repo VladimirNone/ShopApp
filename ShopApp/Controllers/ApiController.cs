@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using ShopApp.Infrastructure;
 using ShopApp.Models;
 using System.Text.Json;
+using ShopApp.ExternalModules;
 
 namespace ShopApp.Controllers
 {
@@ -13,10 +14,12 @@ namespace ShopApp.Controllers
     public class ApiController : Controller
     {
         public IRepository repo { get; set; }
+        public DataGenerator generator { get; set; }
 
-        public ApiController(IRepository repository)
+        public ApiController(IRepository repository, DataGenerator dataGenerator)
         {
             repo = repository;
+            generator = dataGenerator;
         }
 
         [HttpGet("categories")]
@@ -37,14 +40,12 @@ namespace ShopApp.Controllers
 
         [HttpGet("product/{id:int}")]
         public Product GetProductById(int id)
-            => repo.GetProductById(id);
+            => repo.GetProductById(id); 
 
         [HttpGet("prods/{page:int}")]
         public IEnumerable<Product> GetProducts(int page)
-        {
-            var r = repo.FindProductsByName("");
-            r.AddRange(r);
-            r.AddRange(r);
+        {            
+            var r = repo.GetProducts();
             return r;
         }
 
