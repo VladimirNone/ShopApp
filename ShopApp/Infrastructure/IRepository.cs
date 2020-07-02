@@ -21,13 +21,14 @@ namespace ShopApp.Infrastructure
         List<Order> GetOrdersFromUser(User userOwner);
 
         List<Comment> GetCommentsFromUser(User userOwner);
-        List<Comment> GetCommentsFromProduct(Product product);
+        List<Comment> GetCommentsFromProduct(int productId, int page, int count);
 
         Product[] GetProducts();
+        Product[] GetProducts(int page, int count);
         List<Product> GetProductsFromUser(User userAuthor);
-        List<Product> GetProductsByProductTypeName(string typeName);
+        List<Product> GetProductsByProductTypeName(string typeName, int page, int count);
         Product GetProductById(int id);
-        List<Product> FindProductsByName(string partOfName);
+        List<Product> FindProductsByName(string partOfName, int page, int count);
 
         User[] GetUsers();
         User GetUserById(int id);

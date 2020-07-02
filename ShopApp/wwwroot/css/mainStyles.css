@@ -223,13 +223,16 @@ ul {
 .item__info {
 }
 
+.formForNewComment{
+    height:100px;
+}
 
-.product__info{
+.product__info {
     margin: 0 auto;
     max-width: 800px;
     border: 1px solid black;
+    padding: 15px;
 }
-
 
 .product__info__image img {
     display: block;
@@ -248,7 +251,11 @@ ul {
     justify-content: space-between;
 }
 
-.product__info__buyProduct button{
+.product__info__comment{
+    height: 50px;
+}
+
+.product__info__buyProduct button {
     display: block;
     max-width: 80px;
     margin-left: auto;
@@ -264,4 +271,17 @@ ul {
 
 .product__info__showComments button:hover {
     background-color: aqua;
+}
+
+.footer__body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: #ff6a00;
+}
+
+.footer__body__item {
+    padding: 10px;
+    background: #ffaa00;
+    width: auto;
 }

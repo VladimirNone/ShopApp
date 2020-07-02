@@ -13,6 +13,7 @@ namespace ShopApp.Controllers
     [Route("api")]
     public class ApiController : Controller
     {
+        public int CountOfProductsOnPage { get; } = 16;
         public IRepository repo { get; set; }
         public DataGenerator generator { get; set; }
 
@@ -28,15 +29,11 @@ namespace ShopApp.Controllers
 
         [HttpGet("category/{typeName}/{page:int}")]
         public IEnumerable<Product> GetProductsByType(string typeName, int page)
-            => repo.GetProductsByProductTypeName(typeName);
+            => repo.GetProductsByProductTypeName(typeName, page, CountOfProductsOnPage);
 
         [HttpGet("search/{productName}/{page:int}")]
         public IEnumerable<Product> GetProductsByName(string productName, int page)
-        {
-            if (page == 1)
-                return new List<Product>();//testing
-            return repo.FindProductsByName(productName);
-        }
+            => repo.FindProductsByName(productName, page, CountOfProductsOnPage);
 
         [HttpGet("product/{id:int}")]
         public Product GetProductById(int id)
@@ -44,10 +41,12 @@ namespace ShopApp.Controllers
 
         [HttpGet("prods/{page:int}")]
         public IEnumerable<Product> GetProducts(int page)
-        {            
-            var r = repo.GetProducts();
-            return r;
-        }
+            => repo.GetProducts(page, CountOfProductsOnPage);
 
+        [HttpGet("comments/{prodId:int}/{page:int}")]
+        public IEnumerable<Comment> GetCommentByProducts(int prodId, int page)
+            => repo.GetCommentsFromProduct(prodId, page, 5);
+
+        
     }
 }

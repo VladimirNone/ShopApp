@@ -10,7 +10,10 @@ namespace ShopApp.Controllers
     public class MainController : Controller
     {
         [Route("")]
-        public IActionResult Index()
+        [Route("category/{typeName}")]
+        [Route("search/{typeName}")]
+        [Route("category/{categoryName}/{productName}")]
+        public IActionResult MainPage() 
         {
             return View();
         }

@@ -1,34 +1,38 @@
-﻿let host = "https://localhost:5001/";
-
-let urlOfDomen = "api";
-
-let lastRequest = "";
-
-function LoadData(pattern) {
-    let localPattern = host + urlOfDomen + "/" + pattern;
-    let data = {};
-    if (localPattern === lastRequest)
-        return data;
-
-    //$.get(localPattern, responseData => data = responseData);
-
-    let xhr = new XMLHttpRequest();
-    xhr.open("get", localPattern, false);
-    xhr.onload = () => data = JSON.parse(xhr.responseText);
-    xhr.send();
-
-    lastRequest = localPattern;
-    return data;
+﻿
+function ProductInfoComment(props) {
+    return (<li><p>{props.authorId}</p><p>{props.body}</p></li>);
 }
 
-
+class ProductInfoComments extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {
+            loadedComments: [],
+        }; 
+    }
+    render(){
+        let comments = LoadData("/comments/" + this.props.prodId + "/" + this.props.pageComment, []);
+        this.state.loadedComments = this.state.loadedComments.concat(comments);
+        return (<ul>{this.state.loadedComments.map((item, i) => <ProductInfoComment authorId={item.authorId} body={item.body} key={item.id} />)}</ul>);
+    }
+}
 
 class InfoAboutProduct extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            data: LoadData("product/" + document.location.pathname.substr(document.location.pathname.lastIndexOf("/") + 1)),
+            data: LoadData(window.location.pathname, {}, false),
+            // "product/" + document.location.pathname.substr(document.location.pathname.lastIndexOf("/") + 1)
+            pageComment: 0,
         };
+
+        this.onShowComments = this.onShowComments.bind(this);
+    }
+
+    onShowComments(e) {
+        e.preventDefault();
+        ReactDOM.render(<ProductInfoComments prodId={this.state.data.id} pageComment={this.state.pageComment} />, document.getElementById("product__info__comments__wrapper"));
+        this.setState({ pageComment: this.state.pageComment + 1 });
     }
 
     render() {
@@ -39,7 +43,7 @@ class InfoAboutProduct extends React.Component {
             <div className="product__info__basic">
                 <div className="product__info__name">
                     <p>{this.state.data.name}</p>
-                </div>
+                </div> 
                 <div className="product__info__basic__space__between">
                     <div className="product__info__price">
                         <p>{this.state.data.price}</p>
@@ -50,30 +54,25 @@ class InfoAboutProduct extends React.Component {
                 </div>
             </div>
             <div className="product__info__description">
-                <p>
-                    1) В VS 2019 файл Package.appxmanifest
-                    2) Вкладка Packaging
-                    3) Кнопка Choose Certificate
-                    4) Кнопка Configure Certificate
-                    5) Кнопка Create
-                    6) Любой пароль
-                    7) В корневую папку приложения
-                    8) Файл *_TemporaryKey.pfx
-                    9) Публикация приложения в VS с указанием сертификата
-                </p>
+                <p>{this.state.data.description}</p>
             </div>
             <div className="product__info__buyProduct">
-                <button>
-                    Купить
-                                </button>
+                <button>Купить</button>
             </div>
             <div className="product__info__showComments">
-                <button>
+                <div id="product__info__comments__wrapper">
+                </div>
+                <button onClick={this.onShowComments}>
                     Показать комментарии
-                            </button>
+                </button>
             </div>
+            <div className="formForNewComment">
+            </div> 
         </div>);
     }
 }
 
+
+ReactDOM.render(<Seacher />, document.getElementById("seacher"));
+ReactDOM.render(<Categories />, document.getElementById("listOfCategories"));
 ReactDOM.render(<InfoAboutProduct />, document.getElementById("content"));

@@ -31,11 +31,11 @@ namespace ShopApp.Infrastructure
         public void AddProductType(ProductType productType)
             => shopDb.ProductTypes.Add(productType);
 
-        public List<Product> FindProductsByName(string partOfName)
-            => shopDb.Products.Where(p => p.Name.Contains(partOfName)).ToList();
+        public List<Product> FindProductsByName(string partOfName, int page, int count)
+            => shopDb.Products.Where(p => p.Name.Contains(partOfName)).Skip(page * count).Take(count).ToList();
 
-        public List<Comment> GetCommentsFromProduct(Product product)
-            => shopDb.Products.Include(h => h.Comments).Single(h => h.Id == product.Id).Comments;
+        public List<Comment> GetCommentsFromProduct(int productId, int page, int count)
+            => shopDb.Products.Include(h => h.Comments).Single(h => h.Id == productId).Comments.Skip(page*count).Take(count).ToList();
 
         public List<Comment> GetCommentsFromUser(User userOwner)
             => shopDb.Users.Include(h=>h.Comments).Single(h => h.Id == userOwner.Id).Comments;
@@ -55,14 +55,17 @@ namespace ShopApp.Infrastructure
         public Product[] GetProducts()
             => shopDb.Products.AsNoTracking().ToArray();
 
+        public Product[] GetProducts(int page, int count)
+            => shopDb.Products.AsNoTracking().Skip(page * count).Take(count).ToArray();
+
         public User[] GetUsers()
             => shopDb.Users.AsNoTracking().ToArray();
 
         public User GetUserById(int id)
             => shopDb.Users.Find(id); 
 
-        public List<Product> GetProductsByProductTypeName(string typeName)
-            => shopDb.ProductTypes.Include(h => h.Products).Single(h => h.NameOfType.Equals(typeName)).Products;
+        public List<Product> GetProductsByProductTypeName(string typeName, int page, int count)
+            => shopDb.ProductTypes.Include(h => h.Products).Single(h => h.NameOfType.Equals(typeName)).Products.Skip(page * count).Take(count).ToList();
 
         public async Task SaveChangesAsync()
             => await shopDb.SaveChangesAsync();

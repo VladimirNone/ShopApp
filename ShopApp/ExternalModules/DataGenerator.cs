@@ -20,7 +20,7 @@ namespace ShopApp.ExternalModules
         }
 
         public IEnumerable<Comment> GenerateComments(int count)
-            => ObjectGenerator.GenerateComment(repo.GetProducts(), userManager.Users.ToArray()).Generate(count);
+            => ObjectGenerator.GenerateComment(repo.GetProducts(0, -1), userManager.Users.ToArray()).Generate(count);
 
         public IEnumerable<Product> GenerateProducts(int count)
             => ObjectGenerator.GenerateProduct(userManager.Users.ToArray(), repo.GetProductTypes().ToArray()).Generate(count);
@@ -29,7 +29,7 @@ namespace ShopApp.ExternalModules
             => ObjectGenerator.GenerateUser(userManager).Generate(count);
 
         public IEnumerable<Order> GenerateOrders(int count)
-            => ObjectGenerator.GenerateOrder(userManager.Users.ToArray(), repo.GetProducts()).Generate(count);
+            => ObjectGenerator.GenerateOrder(userManager.Users.ToArray(), repo.GetProducts(0, -1)).Generate(count);
 
         public IEnumerable<ProductType> GenerateProductTypes(int count)
             => ObjectGenerator.GenerateProductType().Generate(count);

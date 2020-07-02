@@ -150,7 +150,6 @@ E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\_ViewImports.csh
 E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\ShopApp.RazorTargetAssemblyInfo.cs
 E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\ShopApp.Views.pdb
 E:\Programs\ShopApp\ShopApp\bin\Debug\netcoreapp3.1\libman.json
-E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Main\Index.cshtml.g.cs
 E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Shared\_Layout.cshtml.g.cs
 E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Main\Product.cshtml.g.cs
 E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\ShopApp.genruntimeconfig.cache
@@ -165,3 +164,7 @@ E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\ShopApp.csproj.CoreCompileIn
 E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\ShopApp.MvcApplicationPartsAssemblyInfo.cs
 E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\ShopApp.MvcApplicationPartsAssemblyInfo.cache
 E:\Programs\ShopApp\ShopApp\bin\Debug\netcoreapp3.1\Bogus.dll
+E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Main\MainPage.cshtml.g.cs
+E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Main\MainPage_Category.cshtml.g.cs
+E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Main\MainPage_CategoryAndSearch.cshtml.g.cs
+E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Main\MainPage_Search.cshtml.g.cs

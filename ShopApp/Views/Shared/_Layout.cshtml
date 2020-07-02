@@ -76,10 +76,27 @@
                 </div>
             </div>
         </div>
+        <script src=@Url.Content("~/js/shared.jsx")></script>
+        @RenderBody();
+
         <footer>
+            <div class="footer">
+                <div class="footer__body">
+                    <div class="footer__body__item">
+                        <p>
+                            <a href="https://github.com/VladimirNone/ShopApp">Github создателя</a>
+                        </p>
+                    </div>
+                    <div class="footer__body__item">
+                        <p>
+                            jiltsov01@yandex.ru
+                        </p>
+                    </div>
+                </div>
+            </div>
         </footer>
     </div>
-    @RenderBody();
-    
+
+
 </body>
 </html>
