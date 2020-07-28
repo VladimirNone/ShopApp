@@ -20,6 +20,7 @@ using React.AspNet;
 using ShopApp.Models;
 using Microsoft.AspNetCore.Identity;
 using ShopApp.ExternalModules;
+using ShopApp.Hubs;
 
 namespace ShopApp
 {
@@ -35,19 +36,36 @@ namespace ShopApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLogging();
             services.AddDbContext<ShopAppDbContext>(d => d.UseSqlServer(Configuration.GetConnectionString("ShopAppDb")));
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>(o=> {
+                o.Password.RequireDigit = false;
+                o.Password.RequiredLength = 1;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequireUppercase = false;
+
+                o.User.RequireUniqueEmail = true;
+                })
                 .AddEntityFrameworkStores<ShopAppDbContext>();
 
             services.AddScoped<IRepository, EFShopRepository>();
 
             services.AddTransient<DataGenerator>();
 
+            services.AddMemoryCache();
+
+            services.AddSignalR();
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddReact();
             services.AddJsEngineSwitcher(options => options.DefaultEngineName = ChakraCoreJsEngine.EngineName).AddChakraCore();
 
-            services.AddControllersWithViews();
+            services.AddControllersWithViews(options => options.CacheProfiles.Add("Caching", new CacheProfile()
+            {
+                Duration = 60,
+                Location = ResponseCacheLocation.Client
+            }));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +77,7 @@ namespace ShopApp
             }
 
             app.UseHttpsRedirection();
+
             app.UseRouting();
             app.UseReact(config => { });
             app.UseStaticFiles();
@@ -68,6 +87,7 @@ namespace ShopApp
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<NotifyHub>("/notify");
                 endpoints.MapControllers();
             });
         }

@@ -4,12 +4,20 @@
   "libraries": [
     {
       "library": "jquery@3.3.1",
+      "destination": "wwwroot/lib/jquery/",
       "files": [
         "jquery.min.js",
         "jquery.js",
         "jquery.min.map"
-      ],
-      "destination": "wwwroot/lib/jquery/"
+      ]
+    },
+    {
+      "provider": "unpkg",
+      "library": "@microsoft/signalr@3.1.6",
+      "destination": "wwwroot/lib/microsoft/signalr/",
+      "files": [
+        "dist/browser/signalr.min.js"
+      ]
     }
   ]
 }

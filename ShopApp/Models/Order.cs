@@ -9,6 +9,7 @@ namespace ShopApp.Models
     {
         public int Id { get; set; }
         public DateTime TimeOfBuing { get; set; }
+        public int Count { get; set; }
 
         public string CustomerId { get; set; }
         public User Customer { get; set; }

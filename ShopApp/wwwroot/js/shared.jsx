@@ -1,9 +1,38 @@
-﻿let host = "https://localhost:5001/";
+﻿const Context = React.createContext();
 
-let urlOfDomen = "api";
+let host = "https://localhost:5001/";
 
 let lastRequest = "";
 
+let hubConnection = new signalR.HubConnectionBuilder()
+    .withUrl("/notify")
+    .build();
+
+hubConnection.on("receive", data => {
+    alert(data);
+});
+
+//hubConnection.start();
+
+function LoadDataAsync(pattern, data, relatedWithProds, callbackF) {
+    let something = window.location.pathname;
+    let localPattern;
+    if (relatedWithProds)
+        localPattern = window.location.origin + "/api" + something + (something.localeCompare("/") == 0 ? "prods/" : "/") + pattern;
+    else
+        localPattern = window.location.origin + "/api" + pattern;
+
+    if (localPattern === lastRequest)
+        return data;
+
+    $.get(localPattern, responseData => {
+        data = responseData;
+        callbackF(data);
+    });
+
+    lastRequest = localPattern;
+    return data;
+}
 
 function LoadData(pattern, data, relatedWithProds) {
     let something = window.location.pathname;
@@ -30,6 +59,10 @@ function LoadData(pattern, data, relatedWithProds) {
 
     lastRequest = localPattern;
     return data;
+}
+
+function Loader(props) {
+    return (<div style={{ display: 'flex', justifyContent: 'center', margin: '.5rem' }}><div className="lds-dual-ring"></div></div>)
 }
 
 function Grid_item(props) {
@@ -66,10 +99,27 @@ class Grid extends React.Component {
             data: [],
             countQuery: 0,
             queryChanged: false,
+            loading: true
         };
 
         this.generateProductList = this.generateProductList.bind(this);
         this.autoLoadProducts = this.autoLoadProducts.bind(this);
+        this.callbackFunc = this.callbackFunc.bind(this);
+    }
+
+    callbackFunc(newData) {
+       
+        if (newData.length === 0)
+            return;
+        if (!this.state.queryChanged)
+            newData = this.state.data.concat(newData);
+
+        this.setState({
+            data: newData,
+            countQuery: this.state.countQuery + 1,
+            queryChanged: false,
+            loading: false,
+        });
     }
 
     autoLoadProducts() {
@@ -85,18 +135,7 @@ class Grid extends React.Component {
         let windowHeight = window.innerHeight;
 
         if (scrollTop + windowHeight > scrollHeight - windowHeight / 2 || this.state.queryChanged) {
-
-            let newData = LoadData(this.state.countQuery, [], true);
-            if (newData.length === 0)
-                return;
-            if (!this.state.queryChanged)
-                newData = this.state.data.concat(newData);
-
-            this.setState({
-                data: newData,
-                countQuery: this.state.countQuery + 1,
-                queryChanged: false,
-            })
+            LoadDataAsync(this.state.countQuery, [], true, this.callbackFunc);
         }
     }
 
@@ -151,12 +190,18 @@ class Grid extends React.Component {
     }
 
     render() {
-        return (<ul className="grid">{this.generateProductList()}</ul>);
+        return (
+            <div>
+                {this.state.loading && <Loader />}
+                <ul className="grid">{this.generateProductList()}</ul>
+            </div>
+        );
     }
 }
 
 function Category(props) {
-    return (<li><a onClick={() => props.click(props.value)}>{props.value}</a></li>);
+    const { handleClick } = React.useContext(Context);
+    return (<li><a onClick={() => handleClick(props.value)}>{props.value}</a></li>);
 }
 
 class Categories extends React.Component {
@@ -175,11 +220,14 @@ class Categories extends React.Component {
     handleClick(typeOfProduct) {
         window.location.href = host + 'category/' + typeOfProduct;
         ReactDOM.render(<Grid />, document.getElementById("content"));
-        //query={"category/" + typeOfProduct}
     }
 
     render() {
-        return (this.state.data.map((item, i) => <Category key={item.id} value={item.nameOfType} click={this.handleClick} />));
+        return (
+            <Context.Provider value={{ handleClick: this.handleClick }}>
+                {this.state.data.map((item, i) => <Category key={item.id} value={item.nameOfType} />)}
+            </Context.Provider>
+        );
     }
 }
 
@@ -200,7 +248,7 @@ class Seacher extends React.Component {
             return;
         window.location.href = host + 'search/'+this.state.searchedThing;
         ReactDOM.render(<Grid  />, document.getElementById("content"));
-        //query={"search/" + this.state.searchedThing}
+
         this.setState({ searchedThing: "" });
     }
 
@@ -217,3 +265,144 @@ class Seacher extends React.Component {
         </form>);
     }
 }
+
+class FormForAuth extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            login: '',
+            password: '',
+            passwordConfirm: '',
+            isOpen: false,
+            userAuth: props.authenticated
+        }
+
+        this.Authentication = this.Authentication.bind(this);
+        this.Authorization = this.Authorization.bind(this);
+        this.useInputValue = this.useInputValue.bind(this);
+    }
+
+    useInputValue() {
+        return {
+            bindLogin: {
+                value: this.state.login,
+                onChange: event => this.setState({ login: event.target.value })
+            },
+            bindPassword: {
+                value: this.state.password,
+                onChange: event => this.setState({ password: event.target.value })
+            },
+            bindPasswordConfirm: {
+                value: this.state.passwordConfirm,
+                onChange: event => this.setState({ passwordConfirm: event.target.value })
+            },
+            clear: () => this.setState({ login: '', password: '', passwordConfirm: ''}),
+            login: () => this.state.login,
+            password: () => this.state.password,
+            passwordConfirm: () => this.state.passwordConfirm,
+        }
+    }
+
+    Authentication() {
+        if (!this.useInputValue().login().trim() || !this.useInputValue().password().trim())
+            return;
+        $.post('api/account/login/', { email: this.useInputValue().login(), password: this.useInputValue().password(), passwordConfirm: this.useInputValue().passwordConfirm() }, responseData => this.state.userAuth());
+    }
+
+    Authorization() {
+        if (!this.useInputValue().login().trim() || !this.useInputValue().password().trim() || !this.useInputValue().passwordConfirm().trim()) {
+            return;
+        }
+        this.setState({ isOpen: false });
+        $.post('api/account/reg', { email: this.useInputValue().login(), password: this.useInputValue().password(), passwordConfirm: this.useInputValue().passwordConfirm() }, responseData => this.state.userAuth());
+    } 
+     
+    render() {
+        return (
+            <div>
+                <form className="auth_form_login">
+                    <div className="auth_props">
+                        <input name="login" placeholder="Login" {...this.useInputValue().bindLogin} />
+                        <input name="password" placeholder="Password" {...this.useInputValue().bindPassword} />
+                    </div>
+                    <div className="auth_btns">
+                        <button type="button" onClick={() => this.Authentication()}>Войти</button>
+                        <button type="button" onClick={() => this.setState({ isOpen: true })}>Регистрация</button>
+                    </div>
+                </form>
+                {this.state.isOpen && (
+                    <div className='modal'>
+                        <div className='modal-body'>
+                            <form onSubmit={() => this.Authorization()}>
+                                <div className="auth_props">
+                                    <label>Введите логин</label>
+                                    <input name="login" placeholder="Login" {...this.useInputValue().bindLogin} />
+                                    <label>Введите пароль</label>
+                                    <input name="password" placeholder="Password" {...this.useInputValue().bindPassword} />
+                                    <label>Введите пароль еще раз</label>
+                                    <input name="password" placeholder="Confirm your password" {...this.useInputValue().bindPasswordConfirm} />
+                                </div>
+                                <div className="auth_btns">
+                                    <button type="submit">Регистрация</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>)
+                }
+            </div>
+        );
+    }
+}
+
+class HandlerUserBlock extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            nickname: "",
+            authenticated: false
+        };
+        $.post(window.location.origin + '/api/account/check', responseData => this.setState({ nickname: responseData.nickname, authenticated: responseData.authenticated }));
+    }
+
+    render() {
+        return (this.state.authenticated ?
+            <UserDataBlock
+                exited={() => this.setState({ authenticated: false})}
+                userNickName={this.state.nickname} /> :
+            <FormForAuth
+                authenticated={() => this.setState({ authenticated: true })} />);
+    }
+}
+
+class UserDataBlock extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            exit: props.exited,
+            nickname: props.userNickName
+        }
+    }
+
+    render() {
+        return (
+            <div className="user_data_block_wrapper">
+                <div className="user_data_block_functional">
+                    <ul>
+                        <li>Уведомления</li>
+                        <li>Корзина</li>
+                        <li>Выйти</li>
+                    </ul>
+                </div>
+                <div className="user_data_block_profile">
+                    <ul>
+                        <li>Image</li>
+                        <li><a href={"profile/" + this.state.nickname}> Профиль</a></li>
+                    </ul>
+                </div>
+            </div>
+        );
+    }
+}
+
+

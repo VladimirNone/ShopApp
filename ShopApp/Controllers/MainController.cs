@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ShopApp.Controllers
 {
     [Route("")]
+    //[ResponseCache(CacheProfileName = "Caching")]
     public class MainController : Controller
     {
         [Route("")]
@@ -20,6 +21,12 @@ namespace ShopApp.Controllers
 
         [Route("product/{id:int}")]
         public IActionResult Product(int id)
+        {
+            return View();
+        }
+
+        [Route("profile/{userId}")]
+        public IActionResult Profile()
         {
             return View();
         }

@@ -22,7 +22,6 @@ class InfoAboutProduct extends React.Component {
         super(props);
         this.state = {
             data: LoadData(window.location.pathname, {}, false),
-            // "product/" + document.location.pathname.substr(document.location.pathname.lastIndexOf("/") + 1)
             pageComment: 0,
         };
 
@@ -73,6 +72,7 @@ class InfoAboutProduct extends React.Component {
 }
 
 
+ReactDOM.render(<InfoAboutProduct />, document.getElementById("content"));
 ReactDOM.render(<Seacher />, document.getElementById("seacher"));
 ReactDOM.render(<Categories />, document.getElementById("listOfCategories"));
-ReactDOM.render(<InfoAboutProduct />, document.getElementById("content"));
+ReactDOM.render(<HandlerUserBlock />, document.getElementById("authorization"));
