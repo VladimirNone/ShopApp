@@ -10,6 +10,12 @@ Version 1.01:
   3) Added a page (without styles) that describes the selected product;
   
 Version 1.02:
-  1) Added ability to view product's comments
-  2) Fixed app's architecture
-  3) Connected up the Bogus for generation data
+  1) Added ability to view product's comments;
+  2) Fixed app's architecture;
+  3) Connected up the Bogus for generation data;
+
+Version 1.03
+  1) Added Authentication and Authorization using ASP.NET Core Identity;
+  2) Created load process icon
+  3) Implemented caching of data
+  
