@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using System.Reflection.Metadata;
+using ShopApp.Models.ViewModels;
 
 namespace ShopApp.Controllers.Api
 {
@@ -31,7 +32,7 @@ namespace ShopApp.Controllers.Api
 
         }
         [HttpPost("check")]
-        public object Check()
+        public async Task<object> Check()
         {
             var b = signInManager.IsSignedIn(HttpContext.User);
             return new { authenticated = b, nickname = userManager.GetUserAsync(HttpContext.User).Result?.UserName };
@@ -66,13 +67,12 @@ namespace ShopApp.Controllers.Api
                 if (result.Succeeded)
                 {
                     return Ok();
-                    //return RedirectToAction("MainPage", "Main");
                 }
             }
             return RedirectToAction("MainPage", "Main");
         }
 
-        [HttpPost("logout")]
+        [HttpGet("logout")]
         [Authorize]
         public async Task<IActionResult> Logout()
         {

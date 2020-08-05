@@ -19,8 +19,9 @@ using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using React.AspNet;
 using ShopApp.Models;
 using Microsoft.AspNetCore.Identity;
-using ShopApp.ExternalModules;
+using ShopApp.Modules.ExternalModules;
 using ShopApp.Hubs;
+using ShopApp.Modules.InnerModules;
 
 namespace ShopApp
 {
@@ -51,6 +52,7 @@ namespace ShopApp
             services.AddScoped<IRepository, EFShopRepository>();
 
             services.AddTransient<DataGenerator>();
+            services.AddTransient<IVerificationUserAccess, VerificationUserAccess>();
 
             services.AddMemoryCache();
 

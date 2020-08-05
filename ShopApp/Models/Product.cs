@@ -15,10 +15,10 @@ namespace ShopApp.Models
         public string Description { get; set; }
         public string LinkToImage { get; set; }
         public int Count { get; set; }
+        public bool ProductDeleted { get; set; }
         public DateTime DateOfPublication { get; set; }
 
         public string PublisherId { get; set; }
-        [JsonIgnore]
         public User Publisher { get; set; }
 
         public int TypeId { get; set; }
@@ -28,6 +28,6 @@ namespace ShopApp.Models
         [JsonIgnore]
         public List<Comment> Comments { get; set; }
         [JsonIgnore]
-        public List<Order> Orders { get; set; }
+        public List<OrderedProduct> OrderedProducts { get; set; }
     }
 }

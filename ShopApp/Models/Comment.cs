@@ -10,6 +10,7 @@ namespace ShopApp.Models
         public int Id { get; set; }
         public DateTime TimePublished { get; set; }
         public string Body { get; set; }
+        public bool CommentDeleted { get; set; }
 
         public int ProductId { get; set; }
         public Product Product { get; set; }

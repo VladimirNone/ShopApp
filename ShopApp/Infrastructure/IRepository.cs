@@ -1,4 +1,5 @@
 ﻿using ShopApp.Models;
+using ShopApp.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +14,21 @@ namespace ShopApp.Infrastructure
         void UpdateProduct(Product product);
         void AddUser(User user);
         void AddOrder(Order order);
+        void AddOrderedProduct(OrderedProduct orderedProduct);
         void AddComment(Comment comment);
         void AddProductType(ProductType productType);
 
         List<ProductType> GetProductTypes();
 
-        List<Order> GetOrdersFromUser(User userOwner);
+        List<Order> GetOrdersFromUser(string userId);
+        List<OrderedProduct> GetProductsFromOrderByUser(string userId, int orderId);
+        List<Order> GetProductsFromUserBasket(string userId);
+        Order GetUserOrder(string userId, int orderId, bool isBasket);
+        Order GetUserBasket(string userId);
+        Order[] GetOrders();
 
         List<Comment> GetCommentsFromUser(User userOwner);
+        List<Comment> GetComments(int productId);
         List<Comment> GetCommentsFromProduct(int productId, int page, int count);
 
         Product[] GetProducts();
@@ -32,6 +40,7 @@ namespace ShopApp.Infrastructure
 
         User[] GetUsers();
         User GetUserById(int id);
+        User GetUserByUserName(string name);
 
         Task SaveChangesAsync();
     }

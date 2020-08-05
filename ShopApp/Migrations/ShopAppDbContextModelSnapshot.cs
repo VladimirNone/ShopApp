@@ -163,6 +163,9 @@ namespace ShopApp.Migrations
                     b.Property<string>("Body")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("CommentDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
@@ -185,25 +188,75 @@ namespace ShopApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
+                    b.Property<bool>("Cancelled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Completed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("Confirmed")
+                        .HasColumnType("bit");
 
                     b.Property<string>("CustomerId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("ProductId")
+                    b.Property<DateTime>("DateOfClosing")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateOfOrdering")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateOfPaing")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FinalLocation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ReasonForCancellation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("ShopApp.Models.OrderedProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Cancelled")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("Count")
                         .HasColumnType("int");
+
+                    b.Property<string>("CurrentLocation")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ReasonForCancellation")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("TimeOfBuing")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
+                    b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("OrderedProducts");
                 });
 
             modelBuilder.Entity("ShopApp.Models.Product", b =>
@@ -230,6 +283,9 @@ namespace ShopApp.Migrations
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
+
+                    b.Property<bool>("ProductDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("PublisherId")
                         .HasColumnType("nvarchar(450)");
@@ -312,6 +368,9 @@ namespace ShopApp.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<bool>("UserDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
@@ -384,8 +443,7 @@ namespace ShopApp.Migrations
                 {
                     b.HasOne("ShopApp.Models.User", "Author")
                         .WithMany("Comments")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("AuthorId");
 
                     b.HasOne("ShopApp.Models.Product", "Product")
                         .WithMany("Comments")
@@ -398,13 +456,20 @@ namespace ShopApp.Migrations
                 {
                     b.HasOne("ShopApp.Models.User", "Customer")
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .HasForeignKey("CustomerId");
+                });
+
+            modelBuilder.Entity("ShopApp.Models.OrderedProduct", b =>
+                {
+                    b.HasOne("ShopApp.Models.Order", "Order")
+                        .WithMany("OrderedProducts")
+                        .HasForeignKey("OrderId");
 
                     b.HasOne("ShopApp.Models.Product", "Product")
-                        .WithMany("Orders")
+                        .WithMany("OrderedProducts")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("ShopApp.Models.Product", b =>

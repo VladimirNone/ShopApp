@@ -1,7 +1,5 @@
 ﻿const Context = React.createContext();
 
-let host = "https://localhost:5001/";
-
 let lastRequest = "";
 
 let hubConnection = new signalR.HubConnectionBuilder()
@@ -13,53 +11,6 @@ hubConnection.on("receive", data => {
 });
 
 //hubConnection.start();
-
-function LoadDataAsync(pattern, data, relatedWithProds, callbackF) {
-    let something = window.location.pathname;
-    let localPattern;
-    if (relatedWithProds)
-        localPattern = window.location.origin + "/api" + something + (something.localeCompare("/") == 0 ? "prods/" : "/") + pattern;
-    else
-        localPattern = window.location.origin + "/api" + pattern;
-
-    if (localPattern === lastRequest)
-        return data;
-
-    $.get(localPattern, responseData => {
-        data = responseData;
-        callbackF(data);
-    });
-
-    lastRequest = localPattern;
-    return data;
-}
-
-function LoadData(pattern, data, relatedWithProds) {
-    let something = window.location.pathname;
-    let localPattern;
-    if (relatedWithProds)
-        localPattern = window.location.origin + "/api" + something + (something.localeCompare("/") == 0 ? "prods/" : "/") + pattern;
-    else
-        localPattern = window.location.origin + "/api" + pattern;
-
-    if (localPattern === lastRequest)
-        return data;
-
-    //$.get(localPattern, responseData => data = responseData);
-
-    let xhr = new XMLHttpRequest();
-    xhr.open("get", localPattern, false);
-    xhr.onload = () => data = JSON.parse(xhr.responseText);
-    try {
-        xhr.send();
-    }
-    catch (err) {
-
-    }
-
-    lastRequest = localPattern;
-    return data;
-}
 
 function Loader(props) {
     return (<div style={{ display: 'flex', justifyContent: 'center', margin: '.5rem' }}><div className="lds-dual-ring"></div></div>)
@@ -135,7 +86,7 @@ class Grid extends React.Component {
         let windowHeight = window.innerHeight;
 
         if (scrollTop + windowHeight > scrollHeight - windowHeight / 2 || this.state.queryChanged) {
-            LoadDataAsync(this.state.countQuery, [], true, this.callbackFunc);
+            $.get(window.location.origin + "/api" + window.location.pathname + (window.location.pathname.localeCompare("/") == 0 ? "prods/" : "/") + this.state.countQuery, responseData => this.callbackFunc(responseData));
         }
     }
 
@@ -211,14 +162,13 @@ class Categories extends React.Component {
             data: [],
         };
 
+        $.get(window.location.origin + "/api/categories", resp => this.setState({ data: resp }));
+
         this.handleClick = this.handleClick.bind(this);
-    }
-    componentDidMount() {
-        this.setState({ data: LoadData("/categories", [], false) })
     }
 
     handleClick(typeOfProduct) {
-        window.location.href = host + 'category/' + typeOfProduct;
+        window.location.href = window.location.origin + '/category/' + typeOfProduct;
         ReactDOM.render(<Grid />, document.getElementById("content"));
     }
 
@@ -246,7 +196,7 @@ class Seacher extends React.Component {
         e.preventDefault();
         if (!this.state.searchedThing)
             return;
-        window.location.href = host + 'search/'+this.state.searchedThing;
+        window.location.href = window.location.origin + '/search/'+this.state.searchedThing;
         ReactDOM.render(<Grid  />, document.getElementById("content"));
 
         this.setState({ searchedThing: "" });
@@ -307,7 +257,7 @@ class FormForAuth extends React.Component {
     Authentication() {
         if (!this.useInputValue().login().trim() || !this.useInputValue().password().trim())
             return;
-        $.post('api/account/login/', { email: this.useInputValue().login(), password: this.useInputValue().password(), passwordConfirm: this.useInputValue().passwordConfirm() }, responseData => this.state.userAuth());
+        $.post('api/account/login', { email: this.useInputValue().login(), password: this.useInputValue().password(), passwordConfirm: this.useInputValue().passwordConfirm() }, responseData => this.state.userAuth());
     }
 
     Authorization() {
@@ -391,13 +341,13 @@ class UserDataBlock extends React.Component {
                     <ul>
                         <li>Уведомления</li>
                         <li>Корзина</li>
-                        <li>Выйти</li>
+                        <li><a href={window.location.origin+"/api/account/logout"}>Выйти</a></li>
                     </ul>
                 </div>
                 <div className="user_data_block_profile">
                     <ul>
                         <li>Image</li>
-                        <li><a href={"profile/" + this.state.nickname}> Профиль</a></li>
+                        <li><a href={window.location.origin + "/profile/" + this.state.nickname}> Профиль</a></li>
                     </ul>
                 </div>
             </div>

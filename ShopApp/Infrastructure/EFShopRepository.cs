@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using ShopApp.Models.ViewModels;
 
 namespace ShopApp.Infrastructure
 {
@@ -22,6 +23,9 @@ namespace ShopApp.Infrastructure
         public void AddOrder(Order order)
             => shopDb.Orders.Add(order);
 
+        public void AddOrderedProduct(OrderedProduct orderedProduct)
+            => shopDb.OrderedProducts.Add(orderedProduct);
+
         public void AddProduct(Product product)
             => shopDb.Products.Add(product);
 
@@ -35,16 +39,41 @@ namespace ShopApp.Infrastructure
             => shopDb.Products.Where(p => p.Name.Contains(partOfName)).Skip(page * count).Take(count).ToList();
 
         public List<Comment> GetCommentsFromProduct(int productId, int page, int count)
-            => shopDb.Products.Include(h => h.Comments).Single(h => h.Id == productId).Comments.Skip(page*count).Take(count).ToList();
+        {
+            shopDb.Users.Load();
+            return shopDb.Products.Include(h => h.Comments).Single(h => h.Id == productId).Comments.Where(h => h.CommentDeleted == false).Skip(page * count).Take(count).ToList();
+        }
+
+        public List<Comment> GetComments(int productId)
+            => shopDb.Products.Include(h => h.Comments).Single(h => h.Id == productId).Comments.ToList();
 
         public List<Comment> GetCommentsFromUser(User userOwner)
             => shopDb.Users.Include(h=>h.Comments).Single(h => h.Id == userOwner.Id).Comments;
 
-        public List<Order> GetOrdersFromUser(User userOwner)
-            => shopDb.Users.Include(h => h.Orders).Single(h => h.Id == userOwner.Id).Orders;
+        public List<Order> GetOrdersFromUser(string userId)
+            => shopDb.Users.Include(h => h.Orders).Single(h => h.Id == userId).Orders.Where(h=>h.Confirmed == true).Distinct().ToList();
+
+        public List<Order> GetProductsFromUserBasket(string userId)
+            => shopDb.Users.Include(h => h.Orders).Single(h => h.Id == userId).Orders.Where(h => h.Confirmed == false).Distinct().ToList();
+
+        public List<OrderedProduct> GetProductsFromOrderByUser(string userId, int orderId)
+            => shopDb.Users.Include(h => h.Orders).Single(h => h.Id == userId).Orders.Single(h => h.Id == orderId).OrderedProducts;
+
+        public Order GetUserOrder(string userId, int orderId, bool isBasket)
+        {
+            shopDb.Products.Load();
+            shopDb.OrderedProducts.Load();
+            return shopDb.Users.Include(h => h.Orders).Single(h => h.Id == userId).Orders.Single(h => h.Confirmed == !isBasket && h.Id == orderId);
+        }
+
+        public Order GetUserBasket(string userId)
+            => shopDb.Users.Include(h => h.Orders).Single(h => h.Id == userId).Orders.Single(h => h.Confirmed == false);
+
+        public Order[] GetOrders()
+            => shopDb.Orders.AsNoTracking().ToArray();
 
         public Product GetProductById(int id)
-            => shopDb.Products.Single(p => p.Id == id);
+            => shopDb.Products.Include(h=>h.Publisher).Single(p => p.Id == id);
 
         public List<Product> GetProductsFromUser(User userAuthor)
             => shopDb.Users.Include(h => h.PublishedProducts).Single(h => h.Id == userAuthor.Id).PublishedProducts;
@@ -62,7 +91,10 @@ namespace ShopApp.Infrastructure
             => shopDb.Users.AsNoTracking().ToArray();
 
         public User GetUserById(int id)
-            => shopDb.Users.Find(id); 
+            => shopDb.Users.Find(id);
+
+        public User GetUserByUserName(string name)
+            => shopDb.Users.AsNoTracking().SingleOrDefault(h => h.UserName == name);
 
         public List<Product> GetProductsByProductTypeName(string typeName, int page, int count)
             => shopDb.ProductTypes.Include(h => h.Products).Single(h => h.NameOfType.Equals(typeName)).Products.Skip(page * count).Take(count).ToList();

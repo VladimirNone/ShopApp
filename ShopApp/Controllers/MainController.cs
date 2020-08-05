@@ -20,13 +20,19 @@ namespace ShopApp.Controllers
         }
 
         [Route("product/{id:int}")]
-        public IActionResult Product(int id)
+        public IActionResult Product()
         {
             return View();
         }
 
         [Route("profile/{userId}")]
         public IActionResult Profile()
+        {
+            return View();
+        }
+
+        [Route("order/{orderId}")]
+        public IActionResult Order()
         {
             return View();
         }

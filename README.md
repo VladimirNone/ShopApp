@@ -19,4 +19,12 @@ Version 1.03
   2) Created load process icon;
   3) Implemented caching of data;
   4) Added user page.
+
+Version 1.04:
+  1) All the request was become async;
+  2) Changed struct of Product Page;
+  3) Added ability to buy and comment product;
+  4) Added Order Page, which discribe order;
+  5) Users can't get a list of orders another user (except for admins);
+  6) Fixed Exit for authenticated users.
   

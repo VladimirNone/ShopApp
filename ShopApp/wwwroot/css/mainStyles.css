@@ -371,8 +371,6 @@ ul {
     display: flex;
     flex-direction: row;
     height: 500px;
-    width: 80%;
-    margin: 0px auto;
 }
 
 .profile_icon{
@@ -385,4 +383,39 @@ ul {
     width: 50%;
     background-color: green;
     margin: 20px;
+}
+
+.profile_wrapper_main {
+    width: 80%;
+    margin: 0px auto;
+}
+
+.order_item {
+    border: 1px solid black;
+}
+
+.order_wrapper {
+    width: 80%;
+    margin: 0px auto;
+}
+
+.product_order_item {
+    border: 1px solid black;
+}
+
+.user_data_block_functional li a{
+    margin: 0px;
+}
+
+.zebra{
+    background-color: antiquewhite;
+}
+
+.formForNewComment form{
+    margin: 10px 0;
+}
+
+.formForNewComment form input {
+    width: 100%;
+    height: 60px;
 }
