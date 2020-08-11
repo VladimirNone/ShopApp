@@ -19,6 +19,10 @@
     <Compile Remove="Migrations\20200729084751_ability_delete_and_cancel_anything.Designer.cs" />
     <Compile Remove="Migrations\20200729092910_ability_delete_and_cancel_anything.cs" />
     <Compile Remove="Migrations\20200729092910_ability_delete_and_cancel_anything.Designer.cs" />
+    <Compile Remove="Migrations\20200810100830_updatedOrderModel.cs" />
+    <Compile Remove="Migrations\20200810100830_updatedOrderModel.Designer.cs" />
+    <Compile Remove="Migrations\20200810101922_liedMigr.cs" />
+    <Compile Remove="Migrations\20200810101922_liedMigr.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

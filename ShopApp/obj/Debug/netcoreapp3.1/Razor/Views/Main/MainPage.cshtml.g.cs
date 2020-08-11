@@ -20,7 +20,7 @@ using React.AspNet;
 #line hidden
 #nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"87c8409fa98d3ed4224d153c717c98ad01ea23b3", @"/Views/Main/MainPage.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"9fdd2b5ddbabeb550e3ecfe43c6c8dfdbef4730c", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"d0c71b44282c797124c2ab7f71eff48eb6e36d61", @"/Views/_ViewImports.cshtml")]
     public class Views_Main_MainPage : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     {
         #pragma warning disable 1998

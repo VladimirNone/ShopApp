@@ -20,7 +20,7 @@ a {
 
 .header {
     width: 100%;
-} 
+}
 
 .header_body {
     background-color: #ff6a00;
@@ -77,9 +77,9 @@ a {
     background: #51f83d;
 }
 
-    .auth_props input, .auth_btns button {
-        margin: 2px;
-    }
+.auth_props input, .auth_btns button {
+    margin: 2px;
+}
 
 
 .categories li {
@@ -262,12 +262,19 @@ ul {
     height: 50px;
 }
 
-.product__info__buyProduct button {
-    display: block;
-    max-width: 80px;
-    margin-left: auto;
-    margin-right: 0;
+.product__info__buyProduct {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
 }
+
+    .product__info__buyProduct input {
+        width: 10%;
+    }
+
+    .product__info__buyProduct input, .product__info__buyProduct button {
+        margin: 1em 1em;
+    }
 
 .product__info__showComments button {
     width: 100%;
@@ -333,16 +340,15 @@ ul {
     padding-top: 5rem;
 }
 
-.modal label {
-    font-size: 14px;
-    margin: 2px;
-}
+    .modal label {
+        font-size: 14px;
+        margin: 2px;
+    }
 
-.modal button {
-    max-width: 33%;
-    margin: 5px 0px;
-
-}
+    .modal button {
+        max-width: 33%;
+        margin: 5px 0px;
+    }
 
 .modal-body {
     padding: 2rem;
@@ -356,7 +362,6 @@ ul {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    
 }
 
     .user_data_block_wrapper li {
@@ -373,7 +378,7 @@ ul {
     height: 500px;
 }
 
-.profile_icon{
+.profile_icon {
     width: 50%;
     background-color: red;
     padding: 20px;
@@ -392,6 +397,17 @@ ul {
 
 .order_item {
     border: 1px solid black;
+    padding: 10px;
+}
+
+    .order_item p {
+        margin: 0.5em 0;
+    }
+
+.functional {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .order_wrapper {
@@ -403,19 +419,57 @@ ul {
     border: 1px solid black;
 }
 
-.user_data_block_functional li a{
+.user_data_block_functional li a, .user_data_block_profile li a {
     margin: 0px;
 }
 
-.zebra{
+.zebra {
     background-color: antiquewhite;
 }
 
-.formForNewComment form{
+.formForNewComment form {
     margin: 10px 0;
 }
 
-.formForNewComment form input {
-    width: 100%;
-    height: 60px;
+    .formForNewComment form input {
+        width: 100%;
+        height: 60px;
+    }
+
+.product_order_item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
+
+.product_order_item_info {
+    width: 70%;
+}
+
+.product_order_item_interaction {
+    width: 30%;
+}
+
+    .product_order_item_interaction button {
+        margin: 0 0 0 100px;
+    }
+
+.order_header {
+    display: flex;
+    flex-direction: row;
+}
+
+    .order_header h2 {
+        width: 50%;
+    }
+
+.order_button {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin: 0.5em;
+}
+
+    .order_button button{
+        font-size: 16px;
+    }

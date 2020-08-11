@@ -15,6 +15,9 @@ using ShopApp.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using ShopApp.Modules.InnerModules;
 using ShopApp.Modules.ExternalModules;
+using Microsoft.AspNetCore.Http.Features;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ShopApp.Controllers.Api
 {
@@ -86,11 +89,21 @@ namespace ShopApp.Controllers.Api
         public IEnumerable<Comment> GetCommentByProducts(int prodId, int page)
             => repo.GetCommentsFromProduct(prodId, page, 5);
 
+        [Authorize]
+        [HttpPost("add_comment")]
+        public async Task<IActionResult> AddCommentToProduct(int productId, string commentBody)
+        {
+            var comment = new Comment() { AuthorId = (await userManager.GetUserAsync(HttpContext.User)).Id, Body = commentBody, ProductId = productId, TimePublished = DateTime.Now };
+            repo.AddComment(comment);
+            await repo.SaveChangesAsync();
+            return Ok(comment);
+        }
+
         [HttpGet("profile/{username?}")]
         public async Task<object> ViewUserData(string username)
         {
             User user = null;
-            if (username == null)
+            if (username == null || username == "null")
                 user = await userManager.GetUserAsync(HttpContext.User);
             else
                 user = repo.GetUserByUserName(username);
@@ -100,6 +113,7 @@ namespace ShopApp.Controllers.Api
             return new { nickname = user.UserName, phoneNumber = user.PhoneNumber, user.DateOfRegistration, user.Email, user.EmailConfirmed };
         }
 
+        [Authorize]
         [HttpGet("orders/{username?}")]
         public async Task<IActionResult> GetOrdersByUserId(string username)
         {
@@ -111,42 +125,96 @@ namespace ShopApp.Controllers.Api
                 return StatusCode(423);
         }
 
+        [Authorize]
         [HttpGet("order/{orderId:int}")]
         public async Task<Order> GetOrder(int orderId)
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
-            if (user == null)
-                return null;
 
-            return repo.GetUserOrder(user.Id, orderId, false);
+            var order = repo.GetUserOrder(user.Id, orderId);
+            order.OrderedProducts = order.OrderedProducts.Except(order.OrderedProducts.Where(h => h.Cancelled)).ToList();
+            return order; 
         }
 
-        [HttpPost("add_comment")]
-        public async Task<IActionResult> AddCommentToProduct(int productId, string commentBody)
-        {
-            var comment = new Comment() { AuthorId = (await userManager.GetUserAsync(HttpContext.User)).Id, Body = commentBody, ProductId = productId, TimePublished = DateTime.Now };
-            repo.AddComment(comment);
-            await repo.SaveChangesAsync();
-            return Ok(comment);
-        }
-
-        [HttpPost("buy")]
-        public async Task<IActionResult> AddProductToBasket(int productId)
+        [Authorize]
+        [HttpPost("placeAnOrder")]
+        public async Task<IActionResult> PlaceAnOrder()
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
-            if (user == null)
-                return StatusCode(423);
+            repo.GetUserBasket(user.Id).State = OrderState.Confirmed;
+            await repo.SaveChangesAsync();
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("orderedProduct/cancel")]
+        public async Task<IActionResult> RemoveOrderedProductFromOrder(int orderedProductId)
+        {
+            repo.GetOrderedProduct(orderedProductId).Cancelled = true;
+            await repo.SaveChangesAsync();
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("order/cancel")]
+        public async Task<IActionResult> RemoveOrder(int orderId, string username)
+        {
+            (string id, bool res) = await verification.Verify(repo.GetUserByUserName(username), await userManager.GetUserAsync(HttpContext.User), userManager, new List<string>() { "admin" });
+
+            if (res)
+            {
+                repo.GetUserOrder(id, orderId).State = OrderState.Cancelled;
+                await repo.SaveChangesAsync();
+            }
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("basket")]
+        public async Task<Order> GetBasket()
+        {
+            var user = await userManager.GetUserAsync(HttpContext.User);
+
+            var basket = repo.GetUserBasket(user.Id);
+
+            if (basket != null)
+                basket.OrderedProducts = basket.OrderedProducts?.Except(basket.OrderedProducts.Where(h => h.Cancelled)).ToList();
+            else
+                basket = new Order() { OrderedProducts = new List<OrderedProduct>() };
+
+            return basket;
+        }
+
+        [Authorize]
+        [HttpPost("basket/cancel")]
+        public async Task<IActionResult> RemoveOrderedProductFromBasket(int selectedProductId)
+        {
+            repo.GetOrderedProduct(selectedProductId).Cancelled = true;
+            await repo.SaveChangesAsync();
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("buy")]
+        public async Task<IActionResult> AddProductToBasket(int productId, int count)
+        {
+            var user = await userManager.GetUserAsync(HttpContext.User);
+
             var basket = repo.GetUserBasket(user.Id);
 
             if (basket == null)
             {
                 basket = new Order();
                 basket.CustomerId = user.Id;
+                basket.State = OrderState.IsBasket;
 
                 repo.AddOrder(basket);
+                await repo.SaveChangesAsync();
             }
 
-            basket.OrderedProducts.Add(new OrderedProduct() { ProductId = productId, Count = 1 });
+            if(basket.OrderedProducts?.Find(o=>o.ProductId == productId) == null)
+                repo.AddOrderedProduct(new OrderedProduct() { ProductId = productId, Count = count, OrderId = basket.Id, TimeOfBuing = DateTime.Now });
+
             await repo.SaveChangesAsync();
             return Ok();
         }

@@ -9,9 +9,7 @@ namespace ShopApp.Models
     public class Order
     {
         public int Id { get; set; }
-        public bool Confirmed { get; set; }
-        public bool Completed { get; set; }
-        public bool Cancelled { get; set; }
+        public OrderState State { get; set; }
         public string FinalLocation { get; set; }
         public string ReasonForCancellation { get; set; }
 

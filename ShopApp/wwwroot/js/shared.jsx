@@ -3,7 +3,7 @@
 let lastRequest = "";
 
 let hubConnection = new signalR.HubConnectionBuilder()
-    .withUrl("/notify")
+    .withUrl(window.location.origin + "/notify")
     .build();
 
 hubConnection.on("receive", data => {
@@ -18,7 +18,7 @@ function Loader(props) {
 
 function Grid_item(props) {
     return (<li className={"grid__item" + " " + props.additionalClass}>
-        <a href={"product/" + props.id}>
+        <a href={window.location.origin + "/product/" + props.id}>
             <img src={props.image} />
             <div className="item__info">
                 <p className="item_name">{props.productName}</p>
@@ -196,7 +196,7 @@ class Seacher extends React.Component {
         e.preventDefault();
         if (!this.state.searchedThing)
             return;
-        window.location.href = window.location.origin + '/search/'+this.state.searchedThing;
+        window.location.href = window.location.origin + '/search/'+ this.state.searchedThing;
         ReactDOM.render(<Grid  />, document.getElementById("content"));
 
         this.setState({ searchedThing: "" });
@@ -257,7 +257,7 @@ class FormForAuth extends React.Component {
     Authentication() {
         if (!this.useInputValue().login().trim() || !this.useInputValue().password().trim())
             return;
-        $.post('api/account/login', { email: this.useInputValue().login(), password: this.useInputValue().password(), passwordConfirm: this.useInputValue().passwordConfirm() }, responseData => this.state.userAuth());
+        $.post(window.location.origin + '/api/account/login', { email: this.useInputValue().login(), password: this.useInputValue().password(), passwordConfirm: this.useInputValue().passwordConfirm() }, responseData => this.state.userAuth());
     }
 
     Authorization() {
@@ -265,7 +265,7 @@ class FormForAuth extends React.Component {
             return;
         }
         this.setState({ isOpen: false });
-        $.post('api/account/reg', { email: this.useInputValue().login(), password: this.useInputValue().password(), passwordConfirm: this.useInputValue().passwordConfirm() }, responseData => this.state.userAuth());
+        $.post(window.location.origin + '/api/account/reg', { email: this.useInputValue().login(), password: this.useInputValue().password(), passwordConfirm: this.useInputValue().passwordConfirm() }, responseData => this.state.userAuth());
     } 
      
     render() {
@@ -340,14 +340,14 @@ class UserDataBlock extends React.Component {
                 <div className="user_data_block_functional">
                     <ul>
                         <li>Уведомления</li>
-                        <li>Корзина</li>
+                        <li><a href={window.location.origin + "/basket"}>Корзина</a></li>
                         <li><a href={window.location.origin+"/api/account/logout"}>Выйти</a></li>
                     </ul>
                 </div>
                 <div className="user_data_block_profile">
                     <ul>
-                        <li>Image</li>
-                        <li><a href={window.location.origin + "/profile/" + this.state.nickname}> Профиль</a></li>
+                        <li><a href="#">Мои товары</a></li>
+                        <li><a href={window.location.origin + "/profile/" + this.state.nickname}>Профиль</a></li>
                     </ul>
                 </div>
             </div>

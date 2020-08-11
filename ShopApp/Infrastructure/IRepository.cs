@@ -23,9 +23,11 @@ namespace ShopApp.Infrastructure
         List<Order> GetOrdersFromUser(string userId);
         List<OrderedProduct> GetProductsFromOrderByUser(string userId, int orderId);
         List<Order> GetProductsFromUserBasket(string userId);
-        Order GetUserOrder(string userId, int orderId, bool isBasket);
+        Order GetUserOrder(string userId, int orderId);
         Order GetUserBasket(string userId);
         Order[] GetOrders();
+
+        OrderedProduct GetOrderedProduct(int id);
 
         List<Comment> GetCommentsFromUser(User userOwner);
         List<Comment> GetComments(int productId);

@@ -1,7 +1,15 @@
 ﻿
 function ProductInfoComment(props) {
     let zebra = props.index % 2 == 1 ? " zebra" : "";
-    return (<li className={zebra}><a href={window.location.origin + "/profile/" + props.authorNick}>{props.authorNick}</a><p>{props.body}</p></li>);
+    return (
+        <li className={zebra}>
+            <a href={window.location.origin + "/profile/" + props.authorNick}>
+                {props.authorNick + "   " + props.time}
+            </a>
+            <p>
+                {props.body}
+            </p>
+        </li>);
 }
 
 class ProductInfoComments extends React.Component {
@@ -39,7 +47,7 @@ class ProductInfoComments extends React.Component {
                 <div className="product__info__showComments">
                     <div className="product__info__comments__wrapper">
                         <ul>
-                            {this.state.loadedComments.map((item, i) => <ProductInfoComment authorNick={item.author.userName} body={item.body} key={i} index={i} />)}
+                            {this.state.loadedComments.map((item, i) => <ProductInfoComment authorNick={item.author.userName} body={item.body} time={item.timePublished} key={i} index={i} />)}
                         </ul>
                     </div>
                     <div className="product__info__button__show__comments">
@@ -62,6 +70,7 @@ class InfoAboutProduct extends React.Component {
         super(props);
         this.state = {
             product: null,
+            countOfProduct: 1,
         };
 
         $.get(window.location.origin + "/api" + window.location.pathname, resp => this.setState({ product: resp }));
@@ -70,7 +79,7 @@ class InfoAboutProduct extends React.Component {
     }
 
     handlerBuing() {
-        $.post(window.location.origin + "/api/buy", { productId: this.state.product.id });
+        $.post(window.location.origin + "/api/buy", { productId: this.state.product.id, count: this.state.countOfProduct });
     }
 
     render() {
@@ -98,6 +107,8 @@ class InfoAboutProduct extends React.Component {
                 <p>{this.state.product.description}</p>
             </div>
             <div className="product__info__buyProduct">
+                <p>Количество: </p>
+                <input type="number" value={this.state.countOfProduct} onChange={e => this.setState({ countOfProduct: e.target.valueAsNumber })} />
                 <button onClick={this.handlerBuing}>Купить</button>
             </div>
             <div id="product__info_comments">

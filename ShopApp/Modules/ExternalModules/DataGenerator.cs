@@ -20,7 +20,7 @@ namespace ShopApp.Modules.ExternalModules
         }
 
         public IEnumerable<Comment> GenerateComments(int count)
-            => ObjectGenerator.GenerateComment(repo.GetProducts(0, -1), userManager.Users.ToArray()).Generate(count);
+            => ObjectGenerator.GenerateComment(repo.GetProducts(), userManager.Users.ToArray()).Generate(count);
 
         public IEnumerable<Product> GenerateProducts(int count)
             => ObjectGenerator.GenerateProduct(userManager.Users.ToArray(), repo.GetProductTypes().ToArray()).Generate(count);

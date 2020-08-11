@@ -174,3 +174,4 @@ E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\ShopApp.MvcApplicationPartsA
 E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\ShopApp.MvcApplicationPartsAssemblyInfo.cache
 E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Main\Profile.cshtml.g.cs
 E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Main\Order.cshtml.g.cs
+E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Main\Basket.cshtml.g.cs

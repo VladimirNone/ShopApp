@@ -87,6 +87,16 @@ namespace ShopApp
             app.UseAuthentication();
             app.UseAuthorization();
 
+/*            app.Use(async (context, next) =>
+            {
+                var db = context.RequestServices.GetService<ShopAppDbContext>();
+                var generator = context.RequestServices.GetService<DataGenerator>();
+
+
+
+                await next.Invoke();
+            });*/
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapHub<NotifyHub>("/notify");

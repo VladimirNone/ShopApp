@@ -41,7 +41,7 @@ namespace ShopApp.Infrastructure
         public List<Comment> GetCommentsFromProduct(int productId, int page, int count)
         {
             shopDb.Users.Load();
-            return shopDb.Products.Include(h => h.Comments).Single(h => h.Id == productId).Comments.Where(h => h.CommentDeleted == false).Skip(page * count).Take(count).ToList();
+            return shopDb.Products.Include(h => h.Comments).Single(h => h.Id == productId).Comments.Where(h => h.CommentDeleted == false).SkipLast(page * count).TakeLast(count).Reverse().ToList();
         }
 
         public List<Comment> GetComments(int productId)
@@ -51,23 +51,25 @@ namespace ShopApp.Infrastructure
             => shopDb.Users.Include(h=>h.Comments).Single(h => h.Id == userOwner.Id).Comments;
 
         public List<Order> GetOrdersFromUser(string userId)
-            => shopDb.Users.Include(h => h.Orders).Single(h => h.Id == userId).Orders.Where(h=>h.Confirmed == true).Distinct().ToList();
+            => shopDb.Users.Include(h => h.Orders).Single(h => h.Id == userId).Orders.Where(h => h.State == OrderState.Completed || h.State == OrderState.Confirmed).Distinct().ToList();
 
         public List<Order> GetProductsFromUserBasket(string userId)
-            => shopDb.Users.Include(h => h.Orders).Single(h => h.Id == userId).Orders.Where(h => h.Confirmed == false).Distinct().ToList();
+            => shopDb.Users.Include(h => h.Orders).Single(h => h.Id == userId).Orders.Where(h => h.State == OrderState.IsBasket).Distinct().ToList();
 
         public List<OrderedProduct> GetProductsFromOrderByUser(string userId, int orderId)
-            => shopDb.Users.Include(h => h.Orders).Single(h => h.Id == userId).Orders.Single(h => h.Id == orderId).OrderedProducts;
+            => shopDb.Users.Include(h => h.Orders).Single(h => h.Id == userId).Orders.Single(h => h.Id == orderId).OrderedProducts.Where(h => h.Cancelled == false).ToList();
 
-        public Order GetUserOrder(string userId, int orderId, bool isBasket)
+        public Order GetUserOrder(string userId, int orderId)
         {
             shopDb.Products.Load();
-            shopDb.OrderedProducts.Load();
-            return shopDb.Users.Include(h => h.Orders).Single(h => h.Id == userId).Orders.Single(h => h.Confirmed == !isBasket && h.Id == orderId);
+            return shopDb.Orders.Include(h => h.OrderedProducts).SingleOrDefault(h => h.Id == orderId && h.CustomerId == userId && h.State == OrderState.Completed || h.State == OrderState.Confirmed);
         }
 
         public Order GetUserBasket(string userId)
-            => shopDb.Users.Include(h => h.Orders).Single(h => h.Id == userId).Orders.Single(h => h.Confirmed == false);
+        {
+            shopDb.Products.Load();
+            return shopDb.Orders.Include(h=>h.OrderedProducts).SingleOrDefault(h=>h.CustomerId == userId && h.State == OrderState.IsBasket);
+        }
 
         public Order[] GetOrders()
             => shopDb.Orders.AsNoTracking().ToArray();
@@ -104,5 +106,8 @@ namespace ShopApp.Infrastructure
 
         public void UpdateProduct(Product product)
             => shopDb.Update(product);
+
+        public OrderedProduct GetOrderedProduct(int id)
+            => shopDb.OrderedProducts.Single(h => h.Id == id);
     }
 }

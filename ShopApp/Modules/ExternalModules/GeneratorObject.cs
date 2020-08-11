@@ -42,8 +42,7 @@ namespace ShopApp.Modules.ExternalModules
                 .RuleFor(h => h.CustomerId, g => g.Random.ArrayElement(customers.Select(h => h.Id).ToArray()))
                 .RuleFor(h => h.DateOfOrdering, g => g.Date.Between(DateTime.Parse("1990.05.05"), DateTime.Now))
                 .RuleFor(h => h.DateOfClosing, (g, o) => g.Date.Between(o.DateOfOrdering, DateTime.Now))
-                .RuleFor(h => h.Confirmed, g => true)
-                .RuleFor(h => h.Confirmed, g => true);
+                .RuleFor(h => h.State, g => OrderState.Completed);
 
         public static Faker<User> GenerateUser(UserManager<User> manager)
             => new Faker<User>("ru")

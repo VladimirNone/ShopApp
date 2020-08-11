@@ -16,15 +16,22 @@ namespace ShopApp.Infrastructure
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
 
-        public ShopAppDbContext(DbContextOptions options) : base(options)
+        public ShopAppDbContext(DbContextOptions options) : base (options)
         {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-/*            modelBuilder.Entity<Comment>().HasOne(c => c.Author).WithMany(u => u.Comments).HasForeignKey(c => c.AuthorId).OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<OrderedProduct>().HasOne(o => o.Product).WithMany(p => p.Orders).HasForeignKey(o => o.ProductId).OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<Order>().HasOne(o => o.Customer).WithMany(u => u.Orders).HasForeignKey(o => o.CustomerId).OnDelete(DeleteBehavior.Restrict);*/
+            /*            modelBuilder.Entity<Comment>().HasOne(c => c.Author).WithMany(u => u.Comments).HasForeignKey(c => c.AuthorId).OnDelete(DeleteBehavior.Restrict);
+                        modelBuilder.Entity<OrderedProduct>().HasOne(o => o.Product).WithMany(p => p.Orders).HasForeignKey(o => o.ProductId).OnDelete(DeleteBehavior.Restrict);
+                        modelBuilder.Entity<Order>().HasOne(o => o.Customer).WithMany(u => u.Orders).HasForeignKey(o => o.CustomerId).OnDelete(DeleteBehavior.Restrict);*/
+
+            modelBuilder
+                .Entity<Order>()
+                .Property(e => e.State)
+                .HasConversion(
+                    v => v.ToString(),
+                    v => (OrderState)Enum.Parse(typeof(OrderState), v));
 
             base.OnModelCreating(modelBuilder);
         }

@@ -25,7 +25,7 @@ namespace ShopApp.Controllers
             return View();
         }
 
-        [Route("profile/{userId}")]
+        [Route("profile/{userName}")]
         public IActionResult Profile()
         {
             return View();
@@ -33,6 +33,12 @@ namespace ShopApp.Controllers
 
         [Route("order/{orderId}")]
         public IActionResult Order()
+        {
+            return View();
+        }
+
+        [Route("basket")]
+        public IActionResult Basket()
         {
             return View();
         }
