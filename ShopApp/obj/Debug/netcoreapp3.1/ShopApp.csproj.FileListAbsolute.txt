@@ -175,3 +175,5 @@ E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\ShopApp.MvcApplicationPartsA
 E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Main\Profile.cshtml.g.cs
 E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Main\Order.cshtml.g.cs
 E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Main\Basket.cshtml.g.cs
+E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Main\NewProduct.cshtml.g.cs
+E:\Programs\ShopApp\ShopApp\obj\Debug\netcoreapp3.1\Razor\Views\Main\UserProducts.cshtml.g.cs

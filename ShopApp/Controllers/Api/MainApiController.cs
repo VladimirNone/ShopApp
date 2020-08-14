@@ -18,6 +18,10 @@ using ShopApp.Modules.ExternalModules;
 using Microsoft.AspNetCore.Http.Features;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
 
 namespace ShopApp.Controllers.Api
 {
@@ -32,7 +36,9 @@ namespace ShopApp.Controllers.Api
         public UserManager<User> userManager { get; set; }
         public IHubContext<NotifyHub> hub { get; set; }
 
-        public MainApiController(IRepository repository, DataGenerator dataGenerator, IMemoryCache memoryCache, IHubContext<NotifyHub> hubContext, UserManager<User> userMng, IVerificationUserAccess vrf)
+        IWebHostEnvironment _appEnvironment;
+
+        public MainApiController(IRepository repository, DataGenerator dataGenerator, IMemoryCache memoryCache, IHubContext<NotifyHub> hubContext, UserManager<User> userMng, IVerificationUserAccess vrf, IWebHostEnvironment appEnvironment)
         {
             repo = repository;
             generator = dataGenerator;
@@ -40,6 +46,7 @@ namespace ShopApp.Controllers.Api
             hub = hubContext;
             userManager = userMng;
             verification = vrf;
+            _appEnvironment = appEnvironment;
         }
 
         public async void Foo()
@@ -48,30 +55,30 @@ namespace ShopApp.Controllers.Api
         }
 
         [HttpGet("categories")]
-        public IEnumerable<ProductType> GetProductTypes()
-            => repo.GetProductTypes();
+        public IActionResult GetProductTypes()
+            => Ok(repo.GetProductTypes());
 
         [HttpGet("category/{typeName}/{page:int}")]
-        public IEnumerable<Product> GetProductsByType(string typeName, int page)
-            => repo.GetProductsByProductTypeName(typeName, page, CountOfProductsOnPage);
+        public IActionResult GetProductsByType(string typeName, int page)
+            => Ok(repo.GetProductsByProductTypeName(typeName, page, CountOfProductsOnPage));
 
         [HttpGet("search/{productName}/{page:int}")]
-        public IEnumerable<Product> GetProductsByName(string productName, int page)
-            => repo.FindProductsByName(productName, page, CountOfProductsOnPage);
+        public IActionResult GetProductsByName(string productName, int page)
+            => Ok(repo.FindProductsByName(productName, page, CountOfProductsOnPage));
 
         [HttpGet("product/{id:int}")]
-        public Product GetProductById(int id)
-            => repo.GetProductById(id);
+        public IActionResult GetProductById(int id)
+            => Ok(repo.GetProductById(id));
 
         [HttpGet("prods/{page:int}")]
-        public IEnumerable<Product> GetProducts(int page)
+        public IActionResult GetProducts(int page)
         {
             //Can use for waiting process icon
             //Thread.Sleep(3000);
 
             var requestData = repo.GetProducts(page, CountOfProductsOnPage);
 
-            if(page < 2)
+/*            if(page < 2)
             {
                 for(int i = 0; i < 2; i++)
                 {
@@ -81,13 +88,13 @@ namespace ShopApp.Controllers.Api
                         return (IEnumerable<Product>)cache.Get("prods" + "\\" + page);
                     
                 }
-            }
-            return requestData;
+            }*/
+            return Ok(requestData);
         }
 
         [HttpGet("comments/{prodId:int}/{page:int}")]
-        public IEnumerable<Comment> GetCommentByProducts(int prodId, int page)
-            => repo.GetCommentsFromProduct(prodId, page, 5);
+        public IActionResult GetCommentByProducts(int prodId, int page)
+            => Ok(repo.GetCommentsFromProduct(prodId, page, 5));
 
         [Authorize]
         [HttpPost("add_comment")]
@@ -141,17 +148,24 @@ namespace ShopApp.Controllers.Api
         public async Task<IActionResult> PlaceAnOrder()
         {
             var user = await userManager.GetUserAsync(HttpContext.User);
-            repo.GetUserBasket(user.Id).State = OrderState.Confirmed;
+            var basket = repo.GetUserBasket(user.Id);
+            basket.State = OrderState.Confirmed;
+            basket.DateOfOrdering = DateTime.Now;
             await repo.SaveChangesAsync();
             return Ok();
         }
 
         [Authorize]
         [HttpPost("orderedProduct/cancel")]
-        public async Task<IActionResult> RemoveOrderedProductFromOrder(int orderedProductId)
+        public async Task<IActionResult> RemoveOrderedProductFromOrder(int orderedProductId, string userId)
         {
-            repo.GetOrderedProduct(orderedProductId).Cancelled = true;
-            await repo.SaveChangesAsync();
+            (string id, bool res) = await verification.Verify(repo.GetUserById(userId), await userManager.GetUserAsync(HttpContext.User), userManager, new List<string>() { "admin" });
+
+            if (res)
+            {
+                repo.GetOrderedProduct(orderedProductId).Cancelled = true;
+                await repo.SaveChangesAsync();
+            }
             return Ok();
         }
 
@@ -166,6 +180,35 @@ namespace ShopApp.Controllers.Api
                 repo.GetUserOrder(id, orderId).State = OrderState.Cancelled;
                 await repo.SaveChangesAsync();
             }
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("newProduct")]
+        public async Task <IActionResult> AddNewProduct(IFormFile file, string product)
+        {
+            var prod = (Product)JsonSerializer.Deserialize(product, typeof(Product));
+            string path = "/Images/";
+            if (file != null)
+            {
+                path += Guid.NewGuid() +"."+ file.FileName.Split('.')[1];
+                // сохраняем файл в папку Images в каталоге wwwroot
+                using var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create);
+                await file.CopyToAsync(fileStream);
+            }
+            else
+            {
+                path += "no_foto.png";
+            }
+
+            if (prod.Count < 1)
+                return BadRequest();
+
+            prod.LinkToImage = path;
+            prod.PublisherId = (await userManager.GetUserAsync(HttpContext.User)).Id;
+            prod.TypeId = 1;
+            repo.AddProduct(prod);
+            await repo.SaveChangesAsync();
             return Ok();
         }
 
@@ -202,6 +245,9 @@ namespace ShopApp.Controllers.Api
 
             var basket = repo.GetUserBasket(user.Id);
 
+            if (count < 1)
+                return BadRequest();
+
             if (basket == null)
             {
                 basket = new Order();
@@ -212,11 +258,43 @@ namespace ShopApp.Controllers.Api
                 await repo.SaveChangesAsync();
             }
 
+            var prod = repo.GetProductById(productId);
+            if (prod.Count < count)
+                return BadRequest();
+            else
+                prod.Count -= count;
+
             if(basket.OrderedProducts?.Find(o=>o.ProductId == productId) == null)
                 repo.AddOrderedProduct(new OrderedProduct() { ProductId = productId, Count = count, OrderId = basket.Id, TimeOfBuing = DateTime.Now });
 
             await repo.SaveChangesAsync();
             return Ok();
         }
+
+        [Authorize]
+        [HttpGet("myProducts")]
+        public async Task<IActionResult> GetUserProducts()
+        {
+            return Ok(repo.GetProductsFromUser(await userManager.GetUserAsync(HttpContext.User)));
+        }
+
+        [Authorize]
+        [HttpPost("myProduct/cancel")]
+        public async Task<IActionResult> RemoveUserProduct(int selectedProductId)
+        {
+            repo.GetProductById(selectedProductId).ProductDeleted = true;
+            await repo.SaveChangesAsync();
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("canSeeButtonRemove")]
+        public async Task<IActionResult> CanSeeButtonRemove(string username)
+        {
+            (string id, bool res) = await verification.Verify(repo.GetUserByUserName(username), await userManager.GetUserAsync(HttpContext.User), userManager, new List<string>() { "admin" });
+
+            return Ok(res);
+        }
+
     }
 }

@@ -38,4 +38,9 @@ Version 1.05:
   6) Fixed bad links;
   7) Changed struct of Db for model "Order";
   8) Comments were sorted by time.
+
+Version 1.06:
+  1) Added the ability to add product using page "New product";
+  2) User can see him own products for sale using page "My products";
+  3) Added the button for delete user account.
   

@@ -42,5 +42,23 @@ namespace ShopApp.Controllers
         {
             return View();
         }
+
+        [Route("new_product")]
+        public IActionResult NewProduct()
+        {
+            return View();
+        }
+
+        [Route("user_products")]
+        public IActionResult UserProducts()
+        {
+            return View();
+        }
+
+        [Route("weatherforecast")]
+        public IActionResult Foo()
+        {
+            return RedirectToActionPermanent("MainPage");
+        }
     }
 }

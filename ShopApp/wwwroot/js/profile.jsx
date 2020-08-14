@@ -4,11 +4,41 @@ class InfoAboutUser extends React.Component {
         super(props);
         this.state = {
             data: {},
-            ordersData: (<div/>)
+            ordersData: (<div />),
+            hasAccessToRemoveProfile: false,
+            isOpen: false,
+            login: "",
+            password: "",
         }
         $.get(window.location.origin + "/api" + window.location.pathname, responseData => {
             this.setState({ data: responseData, ordersData: (<Orders userName={responseData.nickname} />) });
+
+        }).done(() => {
+            $.get(window.location.origin + "/api/canSeeButtonRemove", { username: this.state.data.nickname }, resp => this.setState({ hasAccessToRemoveProfile: resp }));
         });
+
+        this.useInputValue = this.useInputValue.bind(this);
+    }
+
+    useInputValue() {
+        return {
+            bindLogin: {
+                value: this.state.login,
+                onChange: event => this.setState({ login: event.target.value })
+            },
+            bindPassword: {
+                value: this.state.password,
+                onChange: event => this.setState({ password: event.target.value })
+            },
+            clear: () => this.setState({ login: '', password: '' }),
+            login: () => this.state.login,
+            password: () => this.state.password,
+        }
+    }
+
+    removeProfile() {
+        this.setState({ isOpen: false });
+        $.post(window.location.origin + "/api/account/removeUserAccount", { login: this.state.login, password: this.state.password }, resp => window.location.href = window.location.origin + "/api/account/logout" );
     }
 
     render() {
@@ -36,6 +66,25 @@ class InfoAboutUser extends React.Component {
                         </p>
                     </div>
                 </div>
+                {this.state.hasAccessToRemoveProfile ? (<button onClick={() => this.setState({ isOpen: true }) }>Удалить страницу</button>) : (<div />)}
+                {this.state.isOpen && (
+                    <div className='modal'>
+                        <div className='modal_body modal_body_for_remove'> 
+                            <form onSubmit={() => this.removeProfile()}>
+                                <div className="auth_props">
+                                    <label>Введите логин</label>
+                                    <input name="login" placeholder="Login" {...this.useInputValue().bindLogin} />
+                                    <label>Введите пароль</label>
+                                    <input name="password" placeholder="Password" {...this.useInputValue().bindPassword} />
+                                </div>
+                                <div className="auth_btns">
+                                    <button type="submit">Подтвердить</button>
+                                    <button onClick={() => { this.setState({ isOpen: false }) }}>Отмена</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>)
+                }
                 <div className="profile_orders" id="user_orders">
                     {this.state.ordersData}
                 </div>

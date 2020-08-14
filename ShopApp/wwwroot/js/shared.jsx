@@ -283,7 +283,7 @@ class FormForAuth extends React.Component {
                 </form>
                 {this.state.isOpen && (
                     <div className='modal'>
-                        <div className='modal-body'>
+                        <div className='modal_body'>
                             <form onSubmit={() => this.Authorization()}>
                                 <div className="auth_props">
                                     <label>Введите логин</label>
@@ -295,6 +295,7 @@ class FormForAuth extends React.Component {
                                 </div>
                                 <div className="auth_btns">
                                     <button type="submit">Регистрация</button>
+                                    <button onClick={() => this.setState({ isOpen: false })}>Отмена</button>
                                 </div>
                             </form>
                         </div>
@@ -341,12 +342,13 @@ class UserDataBlock extends React.Component {
                     <ul>
                         <li>Уведомления</li>
                         <li><a href={window.location.origin + "/basket"}>Корзина</a></li>
-                        <li><a href={window.location.origin+"/api/account/logout"}>Выйти</a></li>
+                        <li><a href={window.location.origin + "/api/account/logout"}>Выйти</a></li>
                     </ul>
                 </div>
                 <div className="user_data_block_profile">
                     <ul>
-                        <li><a href="#">Мои товары</a></li>
+                        <li><a href={window.location.origin + "/user_products"}>Мои товары</a></li>
+                        <li><a href={window.location.origin + "/new_product"}>Добавить товар</a></li>
                         <li><a href={window.location.origin + "/profile/" + this.state.nickname}>Профиль</a></li>
                     </ul>
                 </div>

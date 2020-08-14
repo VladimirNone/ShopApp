@@ -36,7 +36,7 @@ namespace ShopApp.Infrastructure
             => shopDb.ProductTypes.Add(productType);
 
         public List<Product> FindProductsByName(string partOfName, int page, int count)
-            => shopDb.Products.Where(p => p.Name.Contains(partOfName)).Skip(page * count).Take(count).ToList();
+            => shopDb.Products.Where(p => p.Name.Contains(partOfName) && p.ProductDeleted == false).Skip(page * count).Take(count).ToList();
 
         public List<Comment> GetCommentsFromProduct(int productId, int page, int count)
         {
@@ -62,7 +62,7 @@ namespace ShopApp.Infrastructure
         public Order GetUserOrder(string userId, int orderId)
         {
             shopDb.Products.Load();
-            return shopDb.Orders.Include(h => h.OrderedProducts).SingleOrDefault(h => h.Id == orderId && h.CustomerId == userId && h.State == OrderState.Completed || h.State == OrderState.Confirmed);
+            return shopDb.Orders.Include(h => h.OrderedProducts).SingleOrDefault(h => h.Id == orderId && h.CustomerId == userId && (h.State == OrderState.Completed || h.State == OrderState.Confirmed));
         }
 
         public Order GetUserBasket(string userId)
@@ -75,10 +75,10 @@ namespace ShopApp.Infrastructure
             => shopDb.Orders.AsNoTracking().ToArray();
 
         public Product GetProductById(int id)
-            => shopDb.Products.Include(h=>h.Publisher).Single(p => p.Id == id);
+            => shopDb.Products.Include(h=>h.Publisher).Where(h=>h.ProductDeleted == false).SingleOrDefault(p => p.Id == id);
 
         public List<Product> GetProductsFromUser(User userAuthor)
-            => shopDb.Users.Include(h => h.PublishedProducts).Single(h => h.Id == userAuthor.Id).PublishedProducts;
+            => shopDb.Users.Include(h => h.PublishedProducts).Single(h => h.Id == userAuthor.Id).PublishedProducts.Where(h => h.ProductDeleted == false).ToList();
 
         public List<ProductType> GetProductTypes()
             => shopDb.ProductTypes.ToList();
@@ -87,19 +87,19 @@ namespace ShopApp.Infrastructure
             => shopDb.Products.AsNoTracking().ToArray();
 
         public Product[] GetProducts(int page, int count)
-            => shopDb.Products.AsNoTracking().Skip(page * count).Take(count).ToArray();
+            => shopDb.Products.AsNoTracking().Where(h=> h.ProductDeleted == false).Skip(page * count).Take(count).ToArray();
 
         public User[] GetUsers()
             => shopDb.Users.AsNoTracking().ToArray();
 
-        public User GetUserById(int id)
+        public User GetUserById(string id)
             => shopDb.Users.Find(id);
 
         public User GetUserByUserName(string name)
             => shopDb.Users.AsNoTracking().SingleOrDefault(h => h.UserName == name);
 
         public List<Product> GetProductsByProductTypeName(string typeName, int page, int count)
-            => shopDb.ProductTypes.Include(h => h.Products).Single(h => h.NameOfType.Equals(typeName)).Products.Skip(page * count).Take(count).ToList();
+            => shopDb.ProductTypes.Include(h => h.Products).Single(h => h.NameOfType.Equals(typeName)).Products.Where(h => h.ProductDeleted == false).Skip(page * count).Take(count).ToList();
 
         public async Task SaveChangesAsync()
             => await shopDb.SaveChangesAsync();

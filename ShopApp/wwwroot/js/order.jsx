@@ -1,5 +1,5 @@
 ﻿
-function ProductFromBasketItem(props) {
+function UserProduct(props) {
     let zebra = props.index % 2 == 1 ? " zebra" : "";
 
     return (
@@ -12,7 +12,7 @@ function ProductFromBasketItem(props) {
             <div className="product_order_item_interaction">
                 <button className="product_order_item_interaction_cancel" onClick={() => props.cancel(props.item.id)}> Отмена </button>
             </div>
-        </div>
+        </div> 
     );
 }
 
@@ -30,7 +30,7 @@ class Order extends React.Component {
     }
 
     handleCancellation(id) {
-        $.post(window.location.origin + "/api/orderedProduct/cancel", { orderedProductId: id }, resp => {
+        $.post(window.location.origin + "/api/orderedProduct/cancel", { orderedProductId: id, userId: this.state.order.customerId }, resp => {
             this.state.orderedProducts.splice(this.state.orderedProducts.findIndex(v => id == v.id), 1)
             this.forceUpdate();
         });
@@ -56,7 +56,7 @@ class Order extends React.Component {
 
                 </div>
                 <div className="order_body">
-                    {this.state.orderedProducts.map((value, i) => <ProductFromBasketItem item={value} index={i} id={value.id} key={value.id} cancel={this.handleCancellation} />)}
+                    {this.state.orderedProducts.map((value, i) => <UserProduct item={value} index={i} id={value.id} key={value.id} cancel={this.handleCancellation} />)}
                 </div>
             </div>
         );

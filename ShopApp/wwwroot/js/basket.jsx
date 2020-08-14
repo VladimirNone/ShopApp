@@ -1,5 +1,5 @@
 ﻿
-function ProductFromBasketItem(props) {
+function UserProduct(props) {
     let zebra = props.index % 2 == 1 ? " zebra" : "";
 
     return (
@@ -63,7 +63,7 @@ class Basket extends React.Component {
                 <div className="order_body">
                     {(this.state.selectedProducts.length == 0)
                         ? (<h3>Корзина пуста</h3>)
-                        : this.state.selectedProducts.map((value, i) => <ProductFromBasketItem item={value} index={i} id={value.id} key={value.id} cancel={this.handleCancellation} />)}
+                        : this.state.selectedProducts.map((value, i) => <UserProduct item={value} index={i} id={value.id} key={value.id} cancel={this.handleCancellation} />)}
                 </div>
                 <div className="order_button">
                     {(this.state.selectedProducts.length == 0)

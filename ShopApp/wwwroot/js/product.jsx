@@ -56,7 +56,7 @@ class ProductInfoComments extends React.Component {
                 </div>
                 <div className="formForNewComment">
                     <form>
-                        <input type="text" placeholder="Ваш комментарий" value={this.state.commentBody} onChange={event => this.setState({ commentBody: event.target.value })} />
+                        <textarea type="text" placeholder="Ваш комментарий" value={this.state.commentBody} onChange={event => this.setState({ commentBody: event.target.value })} />
                         <button type="button" onClick={this.handlerPostingComment}>Отправить</button>
                     </form>
                 </div>
@@ -96,7 +96,8 @@ class InfoAboutProduct extends React.Component {
                 </div>
                 <div className="product__info__basic__space__between">
                     <div className="product__info__price">
-                        <p>{this.state.product.price}</p>
+                        <p>Цена: {this.state.product.price}</p>
+                        <p>Количество: {this.state.product.count}</p>
                     </div>
                     <div className="product__info__author">
                         <a href={window.location.origin + "/profile/" + this.state.product.publisher.userName}>{this.state.product.publisher.userName}</a>

@@ -350,7 +350,7 @@ ul {
         margin: 5px 0px;
     }
 
-.modal-body {
+.modal_body {
     padding: 2rem;
     width: 400px;
     border-radius: 5px;
@@ -358,11 +358,15 @@ ul {
     height: 200px;
 }
 
-.user_data_block_wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+.modal_body_for_remove {
+    height: 120px;
 }
+
+    .user_data_block_wrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
 
     .user_data_block_wrapper li {
         font-weight: bold;
@@ -410,13 +414,9 @@ ul {
     justify-content: space-between;
 }
 
-.order_wrapper {
+.order_wrapper, .product_user_list_wrapper {
     width: 80%;
     margin: 0px auto;
-}
-
-.product_order_item {
-    border: 1px solid black;
 }
 
 .user_data_block_functional li a, .user_data_block_profile li a {
@@ -431,26 +431,27 @@ ul {
     margin: 10px 0;
 }
 
-    .formForNewComment form input {
+    .formForNewComment form textarea {
         width: 100%;
         height: 60px;
     }
 
-.product_order_item {
+.product_order_item, .user_product_item {
+    border: 1px solid black;
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.product_order_item_info {
+.product_order_item_info, .user_product_item_info {
     width: 70%;
 }
 
-.product_order_item_interaction {
+.product_order_item_interaction, .user_product_item_interaction {
     width: 30%;
 }
 
-    .product_order_item_interaction button {
+    .product_order_item_interaction button, .user_product_item_interaction button{
         margin: 0 0 0 100px;
     }
 

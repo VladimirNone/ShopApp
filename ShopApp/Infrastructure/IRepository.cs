@@ -41,7 +41,7 @@ namespace ShopApp.Infrastructure
         List<Product> FindProductsByName(string partOfName, int page, int count);
 
         User[] GetUsers();
-        User GetUserById(int id);
+        User GetUserById(string id);
         User GetUserByUserName(string name);
 
         Task SaveChangesAsync();
