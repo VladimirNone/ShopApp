@@ -8,7 +8,7 @@ function ProductInfoComment(props) {
             </a>
             <p>
                 {props.body}
-            </p>
+            </p> 
         </li>);
 }
 
@@ -44,13 +44,13 @@ class ProductInfoComments extends React.Component {
     render() {
         return (
             <React.Fragment>
-                <div className="product__info__showComments">
-                    <div className="product__info__comments__wrapper">
+                <div className="product_info_showComments">
+                    <div className="product_info_comments_wrapper">
                         <ul>
                             {this.state.loadedComments.map((item, i) => <ProductInfoComment authorNick={item.author.userName} body={item.body} time={item.timePublished} key={i} index={i} />)}
                         </ul>
                     </div>
-                    <div className="product__info__button__show__comments">
+                    <div className="product_info_button_show_comments">
                         {this.state.showButton ? (<button onClick={this.handlerShowingComments}> Показать больше комментариев </button>) : (<div/>)}
                     </div>
                 </div>
@@ -86,33 +86,33 @@ class InfoAboutProduct extends React.Component {
         if (this.state.product == null)
             return (<div />);
 
-        return (<div className="product__info">
-            <div className="product__info__image">
+        return (<div className="product_info">
+            <div className="product_info_image">
                 <img src={window.location.origin + this.state.product.linkToImage} />
             </div>
-            <div className="product__info__basic">
-                <div className="product__info__name">
+            <div className="product_info_basic">
+                <div className="product_info_name">
                     <p>{this.state.product.name}</p>
                 </div>
-                <div className="product__info__basic__space__between">
-                    <div className="product__info__price">
+                <div className="product_info_basic_space_between">
+                    <div className="product_info_price">
                         <p>Цена: {this.state.product.price}</p>
                         <p>Количество: {this.state.product.count}</p>
                     </div>
-                    <div className="product__info__author">
-                        <a href={window.location.origin + "/profile/" + this.state.product.publisher.userName}>{this.state.product.publisher.userName}</a>
+                    <div className="product_info_author">
+                        <a href={window.location.origin + "/profile/" + this.state.product.publisher.userName}>Продавец: {this.state.product.publisher.userName}</a>
                     </div>
                 </div>
             </div>
-            <div className="product__info__description">
+            <div className="product_info_description">
                 <p>{this.state.product.description}</p>
             </div>
-            <div className="product__info__buyProduct">
+            <div className="product_info_buyProduct">
                 <p>Количество: </p>
                 <input type="number" value={this.state.countOfProduct} onChange={e => this.setState({ countOfProduct: e.target.valueAsNumber })} />
                 <button onClick={this.handlerBuing}>Купить</button>
             </div>
-            <div id="product__info_comments">
+            <div id="product_info_comments">
                 <ProductInfoComments prodId={this.state.product.id} />
             </div>
         </div>);

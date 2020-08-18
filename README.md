@@ -35,7 +35,7 @@ Version 1.05:
   3) Added next buttons: "Place an order", "Cancel order", "Cancel ordered product";
   4) Added the ability to specify the quantity of the purchased product;
   5) User can see the sum price of an order or basket;
-  6) Fixed bad links;
+  6) Fixed the bad links;
   7) Changed struct of Db for model "Order";
   8) Comments were sorted by time.
 
@@ -44,3 +44,6 @@ Version 1.06:
   2) User can see him own products for sale using page "My products";
   3) Added the button for delete user account.
   
+Version 1.07:
+  1) Fixed the small mistakes;
+  2) Changed appearance;

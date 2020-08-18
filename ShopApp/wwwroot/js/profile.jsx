@@ -46,7 +46,9 @@ class InfoAboutUser extends React.Component {
             <div className="profile_wrapper_main">
                 <div className="profile_wrapper">
                     <div className="profile_icon">
-                        <img href="#" />
+                        <h3>
+                            Место для аватарки
+                        </h3>
                     </div>
                     <div className="profile_info">
                         <p>
@@ -66,7 +68,13 @@ class InfoAboutUser extends React.Component {
                         </p>
                     </div>
                 </div>
-                {this.state.hasAccessToRemoveProfile ? (<button onClick={() => this.setState({ isOpen: true }) }>Удалить страницу</button>) : (<div />)}
+                {this.state.hasAccessToRemoveProfile ? (
+                    <div className="button_remove">
+                        <p>Если вы хотите удалить страницу, нажмите на кнопку.</p>
+                        <button onClick={() => this.setState({ isOpen: true })}>Удалить страницу</button>
+                    </div>
+                )
+                    : (<div />)}
                 {this.state.isOpen && (
                     <div className='modal'>
                         <div className='modal_body modal_body_for_remove'> 

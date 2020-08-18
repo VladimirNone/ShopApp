@@ -20,11 +20,11 @@ namespace ShopApp.Controllers.Api
     [Route("api/account")]
     public class AccountController : Controller
     {
-        public readonly UserManager<User> userManager;
-        public readonly RoleManager<IdentityRole> roleManager;
-        public readonly SignInManager<User> signInManager;
-        public readonly ILogger<AccountController> log;
-        public IVerificationUserAccess verification { get; set; }
+        public UserManager<User> userManager { get; }
+        public RoleManager<IdentityRole> roleManager { get; }
+        public SignInManager<User> signInManager { get; }
+        public ILogger<AccountController> log { get; }
+        public IVerificationUserAccess verification { get; }
         public IRepository repo { get; set; }
 
         public AccountController(UserManager<User> userMngr, RoleManager<IdentityRole> roleMngr, SignInManager<User> signInMngr, ILogger<AccountController> logger, IVerificationUserAccess vrf, IRepository repository)
@@ -38,10 +38,10 @@ namespace ShopApp.Controllers.Api
         }
 
         [HttpPost("check")]
-        public async Task<object> Check()
+        public IActionResult Check()
         {
             var b = signInManager.IsSignedIn(HttpContext.User);
-            return new { authenticated = b, nickname = userManager.GetUserAsync(HttpContext.User).Result?.UserName };
+            return Ok(new { authenticated = b, nickname = userManager.GetUserAsync(HttpContext.User).Result?.UserName });
         }
 
         [HttpPost("reg")]

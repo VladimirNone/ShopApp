@@ -34,24 +34,17 @@ namespace ShopApp.Controllers.Api
         public IMemoryCache cache { get; set; }
         public IVerificationUserAccess verification {get;set;}
         public UserManager<User> userManager { get; set; }
-        public IHubContext<NotifyHub> hub { get; set; }
 
         IWebHostEnvironment _appEnvironment;
 
-        public MainApiController(IRepository repository, DataGenerator dataGenerator, IMemoryCache memoryCache, IHubContext<NotifyHub> hubContext, UserManager<User> userMng, IVerificationUserAccess vrf, IWebHostEnvironment appEnvironment)
+        public MainApiController(IRepository repository, DataGenerator dataGenerator, IMemoryCache memoryCache, UserManager<User> userMng, IVerificationUserAccess vrf, IWebHostEnvironment appEnvironment)
         {
             repo = repository;
             generator = dataGenerator;
             cache = memoryCache;
-            hub = hubContext;
             userManager = userMng;
             verification = vrf;
             _appEnvironment = appEnvironment;
-        }
-
-        public async void Foo()
-        {
-            await hub.Clients.All.SendAsync("receive", "data for you");
         }
 
         [HttpGet("categories")]
@@ -151,6 +144,10 @@ namespace ShopApp.Controllers.Api
             var basket = repo.GetUserBasket(user.Id);
             basket.State = OrderState.Confirmed;
             basket.DateOfOrdering = DateTime.Now;
+
+            foreach (var item in basket.OrderedProducts)
+                item.Product.Count -= item.Count;
+
             await repo.SaveChangesAsync();
             return Ok();
         }
@@ -206,7 +203,6 @@ namespace ShopApp.Controllers.Api
 
             prod.LinkToImage = path;
             prod.PublisherId = (await userManager.GetUserAsync(HttpContext.User)).Id;
-            prod.TypeId = 1;
             repo.AddProduct(prod);
             await repo.SaveChangesAsync();
             return Ok();
@@ -257,12 +253,6 @@ namespace ShopApp.Controllers.Api
                 repo.AddOrder(basket);
                 await repo.SaveChangesAsync();
             }
-
-            var prod = repo.GetProductById(productId);
-            if (prod.Count < count)
-                return BadRequest();
-            else
-                prod.Count -= count;
 
             if(basket.OrderedProducts?.Find(o=>o.ProductId == productId) == null)
                 repo.AddOrderedProduct(new OrderedProduct() { ProductId = productId, Count = count, OrderId = basket.Id, TimeOfBuing = DateTime.Now });
